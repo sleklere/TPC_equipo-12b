@@ -15,5 +15,6 @@ namespace Dominio
         public string Password { get; set; }
         public string Email { get; set; }
         public string FechaCreacion { get; set; }
+        public int LigaId { get; set; }
     }
 }

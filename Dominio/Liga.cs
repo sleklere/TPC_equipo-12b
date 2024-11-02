@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Dominio
 {
-    public class Partido
+    public class Liga
     {
         public int Id { get; set; }
-        public string Fecha { get; set; }
-        public int TipoPartidoId { get; set; }
-        public int Duracion { get; set; }
+        public string Nombre { get; set; }
+        public string FechaCreacion { get; set; }
     }
 }

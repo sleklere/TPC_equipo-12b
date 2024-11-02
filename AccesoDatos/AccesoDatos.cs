@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AccesoDatos
 {
-    public class AccesoDatos
+    public class AccesoDatosDB
     {
         private SqlConnection conexion;
         private SqlCommand comando;
@@ -18,7 +18,7 @@ namespace AccesoDatos
             get { return lector; }
         }
 
-        public AccesoDatos()
+        public AccesoDatosDB()
         {
             conexion = new SqlConnection("Server=localhost\\SQLEXPRESS;Database=TablePong;Integrated Security=True;");
             comando = new SqlCommand();
