@@ -44,6 +44,56 @@ namespace Negocio
             }
         }
 
+        public bool CrearLiga(string nombreLiga)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
+            try
+            {
+                datos.SetearConsulta("INSERT INTO LIGA (nombre, fecha_creacion) VALUES (@nombre, @fecha_creacion)");
+
+                datos.AgregarParametro("@nombre", nombreLiga);
+                datos.AgregarParametro("@fecha_creacion", DateTime.Now); 
+
+                datos.EjecutarAccion();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public bool UpdateLiga(int idLiga, string nuevoNombre)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
+            try
+            {
+                datos.SetearConsulta("UPDATE LIGA SET nombre = @nombre WHERE id = @id");
+
+                datos.AgregarParametro("@nombre", nuevoNombre);
+                datos.AgregarParametro("@id", idLiga);
+
+                datos.EjecutarAccion();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
         public Liga getLigaById(string id)
         {
             AccesoDatosDB datos = new AccesoDatosDB();
