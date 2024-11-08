@@ -12,17 +12,21 @@ namespace TPC_equipo_12b
     public partial class Ligas : System.Web.UI.Page
     {
         public List<Liga> ListaLigas {  get; set; }
-        public int selectedLigaId;
-        protected void Page_Load(object sender, EventArgs e)
+
+        private void CargarLigas()
         {
             LigaNegocio negocio = new LigaNegocio();
             ListaLigas = negocio.listarLigas();
-
             if (ListaLigas != null && ListaLigas.Count > 0)
             {
                 rptLigas.DataSource = ListaLigas;
                 rptLigas.DataBind();
             }
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            CargarLigas();
         }
 
         protected void btnSaveLiga_Click(object sender, EventArgs e)
@@ -35,48 +39,65 @@ namespace TPC_equipo_12b
 
             if(crearLiga)
             {
-                Response.Write("<script>alert('Liga \"" + ligaNombre + "\" guardada exitosamente!');</script>");
                 txtLigaNombre.Text = string.Empty;
-                ListaLigas = negocio.listarLigas();
+                hiddenMessage.Value = "Liga creada correctamente.";
+                CargarLigas();
             } else
             {
-                Response.Write("<script>alert('Error en la creación!');</script>");
+                hiddenMessage.Value = "Error en la creación.";
             }
-        }
-
-        protected void btnModalUpdate_Click(object sender, EventArgs e)
-        {
-            var button = (Button)sender;
-            string ligaId = button.CommandArgument;
-            int id = int.Parse(ligaId);
-            selectedLigaId = id;
         }
 
         protected void updateLiga_Click(object sender, EventArgs e)
         {
-            //int selectedLiga = int.Parse(hiddenLigaId.Value); // Lee el ID desde el campo oculto
-            //string ligaNombre = txtLigaNombreUpdate.Text;
-            //if (selectedLiga != 0)
-            //{
-            //    bool updateLiga;
-            //    //string ligaNombre = txtLigaNombreUpdate.Text;
-            //    LigaNegocio negocio = new LigaNegocio();
-            //    updateLiga = negocio.UpdateLiga(selectedLigaId, ligaNombre);
+            if (!string.IsNullOrEmpty(hiddenLigaId.Value))
+            {
+                string ligaNombre = txtLigaNombreUpdate.Text;
+                int selectedLigaId = Convert.ToInt32(hiddenLigaId.Value);
+                if (selectedLigaId != 0)
+                {
+                    bool updateLiga;
+                    LigaNegocio negocio = new LigaNegocio();
+                    updateLiga = negocio.UpdateLiga(selectedLigaId, ligaNombre);
 
-            //    Response.Write("<script>alert('Liga \"" + selectedLigaId + "\" editada exitosamente!');</script>");
+                    if (updateLiga)
+                    {
+                        txtLigaNombreUpdate.Text = string.Empty;
+                        hiddenMessage.Value = "Liga editada correctamente.";
+                        CargarLigas();
+                    }
+                    else
+                    {
+                        hiddenMessage.Value = "Error en la edición.";
+                    }
 
-            //    if (updateLiga)
-            //    {
-            //        Response.Write("<script>alert('Liga \"" + ligaNombre + "\" editada exitosamente!');</script>");
-            //        txtLigaNombreUpdate.Text = string.Empty;
-            //        ListaLigas = negocio.listarLigas();
-            //    }
-            //    else
-            //    {
-            //        Response.Write("<script>alert('Error en la edicion!');</script>");
-            //    }
+                }
+            }
+        }
 
-            //}
+        protected void deleteLiga_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(hiddenLigaId.Value))
+            {
+                int selectedLigaId = Convert.ToInt32(hiddenLigaId.Value);
+                if (selectedLigaId != 0)
+                {
+                    bool deleteLiga;
+                    LigaNegocio negocio = new LigaNegocio();
+                    deleteLiga = negocio.DeleteLiga(selectedLigaId);
+
+                    if (deleteLiga)
+                    {
+                        CargarLigas();
+                        hiddenMessage.Value = "Liga eliminada correctamente.";
+                    }
+                    else
+                    {
+                        hiddenMessage.Value = "Error en la eliminación";
+                    }
+
+                }
+            }
         }
     }
 }

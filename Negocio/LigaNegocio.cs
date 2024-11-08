@@ -94,6 +94,29 @@ namespace Negocio
             }
         }
 
+        public bool DeleteLiga(int idLiga)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
+            Console.WriteLine("Intentando eliminar liga con ID: " + idLiga);
+            try
+            {
+                datos.SetearConsulta("DELETE FROM LIGA WHERE id = @id");
+                datos.AgregarParametro("@id", idLiga);
+                datos.EjecutarAccion();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
         public Liga getLigaById(string id)
         {
             AccesoDatosDB datos = new AccesoDatosDB();

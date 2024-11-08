@@ -36,10 +36,43 @@
                     </div>
                 </div>
             </nav>
+            <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
 
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
             </asp:ContentPlaceHolder>
         </div>
     </form>
+
+    <div id="successMessage" class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3" role="alert" style="display:none;">
+        <span id="successMessageText"></span>
+        <button type="button" class="btn-close" onclick="hideSuccessMessage()" aria-label="Close"></button>
+    </div>
+
+    <div id="errorMessage" class="alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3" role="alert" style="display:none;">
+        <span id="errorMessageText"></span>
+        <button type="button" class="btn-close" onclick="hideErrorMessage()" aria-label="Close"></button>
+    </div>
+
+  <script>
+      function showSuccessMessage(message) {
+          document.getElementById("successMessageText").innerText = message;
+          document.getElementById("successMessage").style.display = "block";
+          setTimeout(hideSuccessMessage, 5000); 
+      }
+
+      function hideSuccessMessage() {
+          document.getElementById("successMessage").style.display = "none";
+      }
+
+      function showErrorMessage(message) {
+          document.getElementById("errorMessageText").innerText = message;
+          document.getElementById("errorMessage").style.display = "block";
+          setTimeout(hideErrorMessage, 5000); 
+      }
+
+      function hideErrorMessage() {
+          document.getElementById("errorMessage").style.display = "none";
+      }
+</script>
 </body>
 </html>
