@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <asp:ScriptManager ID="ScriptManager1" runat="server" />
+    <%--<asp:ScriptManager ID="ScriptManager1" runat="server" />--%>
 
     <div class="d-flex justify-content-between align-items-center m-4">
         <h1 class="display-4 text-primary fw-bold text-uppercase border-bottom pb-2 mb-0">Ligas</h1>
@@ -22,6 +22,7 @@
                                 <a href='<%# "LigaDetalle.aspx?id=" + Eval("Id") %>' class="btn btn-outline-primary">Ver</a>
                                 <asp:Button ID="btnEditarLiga" runat="server" Text="Editar" CssClass="btn btn-secondary btn-sm"
                                     CommandName="Editar" CommandArgument='<%# Eval("Id") %>' OnCommand="btnEditarLiga_Command" />
+                    <asp:Button ID="btnDeleteLiga" runat="server" Text="Eliminar" CssClass="btn btn-danger" OnClientClick="setLigaIdAndOpenModal(this, 'delete'); return false;" data-ligaid='<%# Eval("Id") %>' />
                             </div>
                         </div>
                     </div>
@@ -79,6 +80,24 @@
         </div>
     </div>
 
+      <div id="deleteModal" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+     <div class="modal-dialog modal-dialog-centered">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <h5 class="modal-title" id="modalDeleteLabel">Eliminar Liga</h5>
+                 <button type="button" class="btn-close" aria-label="Close" onclick="closeUpdateModal()"></button>
+             </div>
+             <div class="modal-footer">
+                 <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
+                 <asp:Button ID="Button2" runat="server" CssClass="btn btn-primary" Text="Eliminar" OnClientClick="closeDeleteModal();" OnClick="deleteLiga_Click" />
+             </div>
+             </div>
+         </div>
+     </div>
+
+    <asp:HiddenField ID="hiddenLigaId" runat="server" />
+    <asp:HiddenField ID="hiddenMessage" runat="server" />
+
     <script>
         function openModal() {
             var modal = document.getElementById("modalPanel");
@@ -92,6 +111,17 @@
             modal.classList.remove("show");
         }
 
+        function setLigaIdAndOpenModal(button, action) {
+            var ligaId = button.getAttribute("data-ligaid");
+            document.getElementById('<%= hiddenLigaId.ClientID %>').value = ligaId;
+
+            if (action === "update") {
+                openUpdateModal();
+            } else {
+                openDeleteModal();
+            }
+        }
+
         function openUpdateModal() {
             var modal = document.getElementById("modalPanel");
             modal.style.display = "block";
@@ -103,5 +133,29 @@
             modal.style.display = "none";
             modal.classList.remove("show");
         }
+
+        function openDeleteModal() {
+            var modal = document.getElementById("deleteModal");
+            modal.style.display = "block";
+            modal.classList.add("show");
+        }
+
+        function closeDeleteModal() {
+            var modal = document.getElementById("deleteModal");
+            modal.style.display = "none";
+            modal.classList.remove("show");
+        }
+
+        window.onload = function () {
+        var message = document.getElementById('<%= hiddenMessage.ClientID %>').value;
+        if (message) {
+            if (message.includes("correctamente")) {
+                showSuccessMessage(message);
+            } else {
+                showErrorMessage(message);
+            }
+                document.getElementById('<%= hiddenMessage.ClientID %>').value = '';
+            }
+        };
     </script>
 </asp:Content>

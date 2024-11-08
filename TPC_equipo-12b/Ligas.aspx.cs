@@ -15,7 +15,8 @@ namespace TPC_equipo_12b
         public int selectedLigaId;
         private List<Jugador> jugadoresAgregados;
 
-        protected void Page_Load(object sender, EventArgs e)
+
+        private void CargarLigas()
         {
             LigaNegocio negocio = new LigaNegocio();
             ListaLigas = negocio.listarLigas();
@@ -36,6 +37,11 @@ namespace TPC_equipo_12b
                 rptLigas.DataSource = ListaLigas;
                 rptLigas.DataBind();
             }
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            CargarLigas();
         }
 
         protected void btnBuscarJugador_Click(object sender, EventArgs e)
@@ -131,10 +137,17 @@ namespace TPC_equipo_12b
         {
             string ligaNombre = txtLigaNombre.Text;
             LigaNegocio negocio = new LigaNegocio();
-
             List<Jugador> jugadoresAgregados = Session["JugadoresAgregados"] as List<Jugador> ?? new List<Jugador>();
+            bool isEdit = int.TryParse(hfLigaId.Value, out int ligaId) && ligaId > 0;
 
-            int ligaId = negocio.CrearLiga(ligaNombre);
+            if (isEdit)
+            {
+                negocio.UpdateLiga(ligaId, ligaNombre);
+            }
+            else
+            {
+                ligaId = negocio.CrearLiga(ligaNombre);
+            }
 
             if (ligaId > 0)
             {
@@ -142,47 +155,47 @@ namespace TPC_equipo_12b
 
                 if (asociacionExitosa)
                 {
-                    Response.Write("<script>alert('Liga \"" + ligaNombre + "\" guardada y jugadores asociados exitosamente!');</script>");
+                    hiddenMessage.Value = $"Liga {(isEdit ? "editada" : "creada")} correctamente.";
+                    CargarLigas();
                     txtLigaNombre.Text = string.Empty;
                     ListaLigas = negocio.listarLigas();
                     Session["JugadoresAgregados"] = null;
                 }
                 else
                 {
-                    Response.Write("<script>alert('Liga creada, pero falló la asociación con los jugadores!');</script>");
+                    hiddenMessage.Value = "Liga creada, pero falló la asociación con los jugadores!";
+                    hiddenMessage.Value = $"Liga {(isEdit ? "editada" : "creada")}, pero falló la asociación con los jugadores!";
                 }
             }
             else
             {
-                Response.Write("<script>alert('Error en la creación de la liga!');</script>");
+                hiddenMessage.Value = $"Error en la {(isEdit ? "edición" : "creación")} de la liga!";
             }
         }
 
-        protected void updateLiga_Click(object sender, EventArgs e)
+        protected void deleteLiga_Click(object sender, EventArgs e)
         {
-            //int selectedLiga = int.Parse(hiddenLigaId.Value); // Lee el ID desde el campo oculto
-            //string ligaNombre = txtLigaNombreUpdate.Text;
-            //if (selectedLiga != 0)
-            //{
-            //    bool updateLiga;
-            //    //string ligaNombre = txtLigaNombreUpdate.Text;
-            //    LigaNegocio negocio = new LigaNegocio();
-            //    updateLiga = negocio.UpdateLiga(selectedLigaId, ligaNombre);
+            if (!string.IsNullOrEmpty(hiddenLigaId.Value))
+            {
+                int selectedLigaId = Convert.ToInt32(hiddenLigaId.Value);
+                if (selectedLigaId != 0)
+                {
+                    bool deleteLiga;
+                    LigaNegocio negocio = new LigaNegocio();
+                    deleteLiga = negocio.DeleteLiga(selectedLigaId);
 
-            //    Response.Write("<script>alert('Liga \"" + selectedLigaId + "\" editada exitosamente!');</script>");
+                    if (deleteLiga)
+                    {
+                        CargarLigas();
+                        hiddenMessage.Value = "Liga eliminada correctamente.";
+                    }
+                    else
+                    {
+                        hiddenMessage.Value = "Error en la eliminación";
+                    }
 
-            //    if (updateLiga)
-            //    {
-            //        Response.Write("<script>alert('Liga \"" + ligaNombre + "\" editada exitosamente!');</script>");
-            //        txtLigaNombreUpdate.Text = string.Empty;
-            //        ListaLigas = negocio.listarLigas();
-            //    }
-            //    else
-            //    {
-            //        Response.Write("<script>alert('Error en la edicion!');</script>");
-            //    }
-
-            //}
+                }
+            }
         }
     }
 }
