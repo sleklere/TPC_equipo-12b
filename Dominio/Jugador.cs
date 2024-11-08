@@ -12,9 +12,10 @@ namespace Dominio
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Username { get; set; }
+        public string Codigo { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
         public string FechaCreacion { get; set; }
-        public int LigaId { get; set; }
+        public List<Liga> Ligas { get; set; } = new List<Liga>();
     }
 }

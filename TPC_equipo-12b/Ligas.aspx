@@ -3,59 +3,81 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <div class="d-flex align-items-center gap-2 mt-2 mb-2">
-        <h1>LIGAS</h1>
-        <button type="button" class="btn btn-primary" onclick="openModal()">Crear Liga</button>
+    <asp:ScriptManager ID="ScriptManager1" runat="server" />
+
+    <div class="d-flex justify-content-between align-items-center m-4">
+        <h1 class="display-4 text-primary fw-bold text-uppercase border-bottom pb-2 mb-0">Ligas</h1>
+        <asp:Button ID="btnCrearLiga" runat="server" Text="Crear Liga" CssClass="btn btn-primary" OnClick="btnCrearLiga_Click" />
     </div>
 
-    <asp:Repeater ID="rptLigas" runat="server">
-        <ItemTemplate>
-            <div class="card w-50">
-                <div class="card-body">
-                    <h5 class="card-title"><%# Eval("Nombre") %></h5>
-                    <p class="card-text">X jugadores</p>
-                    <a href='<%# "LigaDetalle.aspx?id=" + Eval("Id") %>' class="btn btn-primary">Ver</a>
-                    <asp:Button ID="btnVerLiga" runat="server" Text="Modificar" OnClientClick="openUpdateModal(); return false;" OnClick="btnModalUpdate_Click" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-primary" />
+    <div class="row row-cols-1 row-cols-md-2 g-4 mx-4">
+        <asp:Repeater ID="rptLigas" runat="server">
+            <ItemTemplate>
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-uppercase font-weight-bold"><%# Eval("Nombre") %></h5>
+                            <p class="card-text text-muted"><%# ((List<Dominio.Jugador>)Eval("Jugadores")).Count %> jugadores</p>
+                            <div class="d-flex gap-2">
+                                <a href='<%# "LigaDetalle.aspx?id=" + Eval("Id") %>' class="btn btn-outline-primary">Ver</a>
+                                <asp:Button ID="btnEditarLiga" runat="server" Text="Editar" CssClass="btn btn-secondary btn-sm"
+                                    CommandName="Editar" CommandArgument='<%# Eval("Id") %>' OnCommand="btnEditarLiga_Command" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </ItemTemplate>
-    </asp:Repeater>
+            </ItemTemplate>
+        </asp:Repeater>
+    </div>
 
     <div id="modalPanel" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+
+        <%-- diferenciar entre creacion y edicion --%>
+        <asp:HiddenField ID="hfLigaId" runat="server" />
+
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Crear Nueva Liga</h5>
+                    <h5 class="modal-title" id="modalLabel">
+                        <asp:Label ID="lblModalTitle" runat="server" Text="Crear Nueva Liga"></asp:Label>
+                    </h5>
                     <button type="button" class="btn-close" aria-label="Close" onclick="closeModal()"></button>
                 </div>
                 <div class="modal-body">
-                    <asp:TextBox ID="txtLigaNombre" runat="server" CssClass="form-control" placeholder="Nombre de la liga"></asp:TextBox>
+                    <asp:TextBox ID="txtLigaNombre" runat="server" CssClass="form-control mb-3" placeholder="Nombre de la liga"></asp:TextBox>
+
+                    <asp:UpdatePanel ID="UpdatePanelBuscarJugador" runat="server">
+                        <ContentTemplate>
+                            <div class="input-group mb-3">
+                                <asp:TextBox ID="txtCodigoJugador" runat="server" CssClass="form-control" placeholder="Código del jugador"></asp:TextBox>
+                                <asp:Button ID="btnBuscarJugador" runat="server" CssClass="btn btn-outline-secondary" Text="Agregar" OnClick="btnBuscarJugador_Click" />
+                            </div>
+                            <asp:Label ID="lblMensajeBusqueda" runat="server" CssClass="text-info" Visible="false"></asp:Label>
+                            <div class="mt-3">
+                                <h6 class="fw-bold">Jugadores Agregados:</h6>
+                                <asp:Repeater ID="rptJugadoresAgregados" runat="server" OnItemCommand="rptJugadoresAgregados_ItemCommand">
+                                    <ItemTemplate>
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><%# Eval("Username") %></span>
+                                            <asp:Button ID="btnEliminar" runat="server" CommandName="Eliminar" CommandArgument='<%# Eval("Id") %>' Text="Eliminar" CssClass="btn btn-danger btn-sm" />
+                                        </div>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </div>
+                        </ContentTemplate>
+                        <%-- actualizacion parcial (prevenir postback completo) --%>
+                        <Triggers>
+                            <asp:AsyncPostBackTrigger ControlID="btnBuscarJugador" EventName="Click" />
+                        </Triggers>
+                    </asp:UpdatePanel>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-                    <asp:Button ID="btnSaveLiga" runat="server" CssClass="btn btn-primary" Text="Guardar" OnClientClick="closeModal();" OnClick="btnSaveLiga_Click" />
+                    <asp:Button ID="btnSaveLiga" runat="server" CssClass="btn btn-primary" Text="Guardar" OnClick="btnSaveLiga_Click" />
                 </div>
             </div>
         </div>
     </div>
-
-     <div id="updateModal" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-     <div class="modal-dialog modal-dialog-centered">
-         <div class="modal-content">
-             <div class="modal-header">
-                 <h5 class="modal-title" id="modalUpdateLabel">Editar Liga</h5>
-                 <button type="button" class="btn-close" aria-label="Close" onclick="closeUpdateModal()"></button>
-             </div>
-             <div class="modal-body">
-                 <asp:TextBox ID="txtLigaNombreUpdate" runat="server" CssClass="form-control" placeholder="Nombre de la liga"></asp:TextBox>
-             </div>
-             <div class="modal-footer">
-                 <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-                 <asp:Button ID="Button1" runat="server" CssClass="btn btn-primary" Text="Guardar" OnClientClick="closeUpdateModal();" OnClick="updateLiga_Click" />
-             </div>
-             </div>
-         </div>
-     </div>
 
     <script>
         function openModal() {
@@ -71,13 +93,13 @@
         }
 
         function openUpdateModal() {
-            var modal = document.getElementById("updateModal");
+            var modal = document.getElementById("modalPanel");
             modal.style.display = "block";
             modal.classList.add("show");
         }
 
         function closeUpdateModal() {
-            var modal = document.getElementById("updateModal");
+            var modal = document.getElementById("modalPanel");
             modal.style.display = "none";
             modal.classList.remove("show");
         }

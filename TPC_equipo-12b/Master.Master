@@ -1,7 +1,7 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Master.master.cs" Inherits="TPC_equipo_12b.Master" %>
 
 <!DOCTYPE html>
-
+<html lang="es">
 <head runat="server">
     <title>TablePong</title>
     <asp:ContentPlaceHolder ID="head" runat="server">
@@ -15,23 +15,33 @@
 
     <!-- Opcional: Bootstrap Icons (si necesitas íconos) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-
 </head>
 <body>
     <form id="form1" runat="server">
         <div>
-            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
                 <div class="container-fluid">
+                    <a runat="server" class="navbar-brand fw-bold text-uppercase" href="~/">Table Pong</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav">
-                            <a runat="server" class="nav-link active" aria-current="page" href="~/">Inicio</a>
-                            <a runat="server" class="nav-link" href="~/Ligas.aspx">Ligas</a>
-                            <a runat="server" class="nav-link" href="~/Torneos.aspx">Torneos</a>
-                            <a runat="server" class="nav-link" href="~/Versus.aspx">Jugador VS Jugador</a>
-                            <a runat="server" class="nav-link" href="~/Perfil.aspx">Perfil</a>
+                        <div class="navbar-nav ms-auto">
+                            <a runat="server" class="nav-link active text-light fw-bold d-flex align-items-center" href="~/">
+                                <i class="bi bi-house-door me-2"></i>Inicio
+                            </a>
+                            <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Ligas.aspx">
+                                <i class="bi bi-trophy me-2"></i>Ligas
+                            </a>
+                            <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Torneos.aspx">
+                                <i class="bi bi-award me-2"></i>Torneos
+                            </a>
+                            <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Versus.aspx">
+                                <i class="bi bi-people me-2"></i>Jugador VS Jugador
+                            </a>
+                            <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Perfil.aspx">
+                                <i class="bi bi-person-circle me-2"></i>Perfil
+                            </a>
                         </div>
                     </div>
                 </div>
