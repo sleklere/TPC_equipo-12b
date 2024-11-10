@@ -6,7 +6,7 @@
     <%--<asp:ScriptManager ID="ScriptManager1" runat="server" />--%>
 
     <div class="d-flex justify-content-between align-items-center m-4">
-        <h1 class="display-4 text-primary fw-bold text-uppercase border-bottom pb-2 mb-0">Ligas</h1>
+        <h1 class="display-6 text-primary fw-bold text-uppercase border-bottom pb-2 mb-0">Ligas</h1>
         <asp:Button ID="btnCrearLiga" runat="server" Text="Crear Liga" CssClass="btn btn-primary" OnClick="btnCrearLiga_Click" />
     </div>
 

@@ -68,6 +68,7 @@
     <Content Include="Global.asax" />
     <Content Include="LigaDetalle.aspx" />
     <Content Include="Ligas.aspx" />
+    <Content Include="Versus.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +104,13 @@
       <DependentUpon>Master.Master</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Versus.aspx.cs">
+      <DependentUpon>Versus.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Versus.aspx.designer.cs">
+      <DependentUpon>Versus.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Master.Master" />

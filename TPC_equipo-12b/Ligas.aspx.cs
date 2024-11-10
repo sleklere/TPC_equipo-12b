@@ -163,7 +163,7 @@ namespace TPC_equipo_12b
                 }
                 else
                 {
-                    hiddenMessage.Value = "Liga creada, pero falló la asociación con los jugadores!";
+                    //hiddenMessage.Value = "Liga creada, pero falló la asociación con los jugadores!";
                     hiddenMessage.Value = $"Liga {(isEdit ? "editada" : "creada")}, pero falló la asociación con los jugadores!";
                 }
             }

@@ -9,9 +9,10 @@ namespace AccesoDatos
 {
     public class AccesoDatosDB
     {
-        private SqlConnection conexion;
+        public SqlConnection conexion { get; }
         private SqlCommand comando;
         private SqlDataReader lector;
+        private SqlTransaction transaccion;
 
         public SqlDataReader Lector
         {
@@ -51,6 +52,22 @@ namespace AccesoDatos
             {
                 conexion.Open();
                 comando.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public SqlTransaction EjecutarAccionTransaccional()
+        {
+            comando.Connection = conexion;
+            try
+            {
+                conexion.Open();
+                transaccion = conexion.BeginTransaction();
+                comando.ExecuteNonQuery();
+
+                return transaccion;
             }
             catch (Exception ex)
             {

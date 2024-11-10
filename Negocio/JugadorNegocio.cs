@@ -46,5 +46,45 @@ namespace Negocio
             }
         }
 
+        public List<Jugador> listarJugadores()
+        {
+            List<Jugador> jugadores = new List<Jugador>();
+            AccesoDatosDB accesoDatos = new AccesoDatosDB();
+
+            try
+            {
+                accesoDatos.SetearConsulta(@"SELECT id, nombre, apellido, username FROM JUGADOR");
+                accesoDatos.EjecutarLectura();
+
+                while (accesoDatos.Lector.Read())
+                {
+                    int jugadorId = (int)accesoDatos.Lector["id"];
+
+                    Jugador jugador = jugadores.FirstOrDefault(j => j.Id == jugadorId);
+
+                    if (jugador == null)
+                    {
+                        jugador = new Jugador
+                        {
+                            Id = jugadorId,
+                            Nombre = (string)accesoDatos.Lector["nombre"],
+                            Apellido = (string)accesoDatos.Lector["apellido"],
+                            Username = (string)accesoDatos.Lector["username"],
+                        };
+                        jugadores.Add(jugador);
+                    }
+                }
+
+                return jugadores;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                accesoDatos.CerrarConexion();
+            }
+        }
     }
 }

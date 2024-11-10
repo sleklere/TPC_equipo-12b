@@ -12,5 +12,9 @@ namespace Dominio
         public string Fecha { get; set; }
         public int TipoPartidoId { get; set; }
         public int Duracion { get; set; }
+        public string Jugador1Nombre { get; set; }
+        public int PuntosJugador1 { get; set; }
+        public string Jugador2Nombre { get; set; }
+        public int PuntosJugador2 { get; set; }
     }
 }
