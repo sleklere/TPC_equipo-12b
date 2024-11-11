@@ -13,5 +13,12 @@ namespace TPC_equipo_12b
         {
 
         }
+        protected string IsActive(string page)
+        {
+            string currentPage = Request.Url.LocalPath;
+            string isActive =  currentPage.EndsWith(page, StringComparison.OrdinalIgnoreCase) ? "active" : string.Empty;
+            return isActive;
+        }
+
     }
 }

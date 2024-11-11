@@ -55,7 +55,6 @@
             <div class="card" style="width: 20rem;">
                 <div class="card-body">
                     <h5 class="card-title">Liga amigos 2024</h5>
-<%--                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>--%>
                     <div class="d-flex align-items-center justify-content-between" style="width: 100%;">
                         <span><%# Eval("Jugador1Nombre") %></span>
                         <span><%# Eval("PuntosJugador1") %></span>

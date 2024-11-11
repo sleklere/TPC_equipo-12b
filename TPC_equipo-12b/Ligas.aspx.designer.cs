@@ -60,51 +60,6 @@ namespace TPC_equipo_12b
         protected global::System.Web.UI.WebControls.TextBox txtLigaNombre;
 
         /// <summary>
-        /// UpdatePanelBuscarJugador control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UpdatePanel UpdatePanelBuscarJugador;
-
-        /// <summary>
-        /// txtCodigoJugador control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCodigoJugador;
-
-        /// <summary>
-        /// btnBuscarJugador control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnBuscarJugador;
-
-        /// <summary>
-        /// lblMensajeBusqueda control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMensajeBusqueda;
-
-        /// <summary>
-        /// rptJugadoresAgregados control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptJugadoresAgregados;
-
-        /// <summary>
         /// btnSaveLiga control.
         /// </summary>
         /// <remarks>

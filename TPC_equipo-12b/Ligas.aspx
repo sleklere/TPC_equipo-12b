@@ -47,7 +47,7 @@
                 <div class="modal-body">
                     <asp:TextBox ID="txtLigaNombre" runat="server" CssClass="form-control mb-3" placeholder="Nombre de la liga"></asp:TextBox>
 
-                    <asp:UpdatePanel ID="UpdatePanelBuscarJugador" runat="server">
+<%--                    <asp:UpdatePanel ID="UpdatePanelBuscarJugador" runat="server">
                         <ContentTemplate>
                             <div class="input-group mb-3">
                                 <asp:TextBox ID="txtCodigoJugador" runat="server" CssClass="form-control" placeholder="Código del jugador"></asp:TextBox>
@@ -66,11 +66,10 @@
                                 </asp:Repeater>
                             </div>
                         </ContentTemplate>
-                        <%-- actualizacion parcial (prevenir postback completo) --%>
                         <Triggers>
                             <asp:AsyncPostBackTrigger ControlID="btnBuscarJugador" EventName="Click" />
                         </Triggers>
-                    </asp:UpdatePanel>
+                    </asp:UpdatePanel>--%>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>

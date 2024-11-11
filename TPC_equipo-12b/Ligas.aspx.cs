@@ -52,43 +52,43 @@ namespace TPC_equipo_12b
             
         }
 
-        protected void btnBuscarJugador_Click(object sender, EventArgs e)
-        {
-            JugadorNegocio jugadorNegocio = new JugadorNegocio();
-            string codigoJugador = txtCodigoJugador.Text.Trim();
-            lblMensajeBusqueda.Visible = false;
+        //protected void btnBuscarJugador_Click(object sender, EventArgs e)
+        //{
+        //    JugadorNegocio jugadorNegocio = new JugadorNegocio();
+        //    string codigoJugador = txtCodigoJugador.Text.Trim();
+        //    lblMensajeBusqueda.Visible = false;
 
-            Jugador jugador = jugadorNegocio.findJugadorByCodigo(codigoJugador);
+        //    Jugador jugador = jugadorNegocio.findJugadorByCodigo(codigoJugador);
 
-            if (jugador != null)
-            {
-                if (!jugadoresAgregados.Any(j => j.Codigo == codigoJugador))
-                {
-                    jugadoresAgregados.Add(jugador);
-                    Session["JugadoresAgregados"] = jugadoresAgregados;
-                    CargarJugadoresAgregados(); // recargar el Repeater
-                    lblMensajeBusqueda.Text = $"Jugador con código {codigoJugador} encontrado y agregado.";
-                    lblMensajeBusqueda.CssClass = "text-success";
-                }
-                else
-                {
-                    lblMensajeBusqueda.Text = $"El jugador con código {codigoJugador} ya fue agregado.";
-                    lblMensajeBusqueda.CssClass = "text-warning";
-                }
-            }
-            else
-            {
-                lblMensajeBusqueda.Text = $"No se encontró un jugador con el código {codigoJugador}.";
-                lblMensajeBusqueda.CssClass = "text-danger";
-            }
+        //    if (jugador != null)
+        //    {
+        //        if (!jugadoresAgregados.Any(j => j.Codigo == codigoJugador))
+        //        {
+        //            jugadoresAgregados.Add(jugador);
+        //            Session["JugadoresAgregados"] = jugadoresAgregados;
+        //            CargarJugadoresAgregados(); // recargar el Repeater
+        //            lblMensajeBusqueda.Text = $"Jugador con código {codigoJugador} encontrado y agregado.";
+        //            lblMensajeBusqueda.CssClass = "text-success";
+        //        }
+        //        else
+        //        {
+        //            lblMensajeBusqueda.Text = $"El jugador con código {codigoJugador} ya fue agregado.";
+        //            lblMensajeBusqueda.CssClass = "text-warning";
+        //        }
+        //    }
+        //    else
+        //    {
+        //        lblMensajeBusqueda.Text = $"No se encontró un jugador con el código {codigoJugador}.";
+        //        lblMensajeBusqueda.CssClass = "text-danger";
+        //    }
 
-            lblMensajeBusqueda.Visible = true;
-        }
+        //    lblMensajeBusqueda.Visible = true;
+        //}
         protected void CargarJugadoresAgregados()
         {
             jugadoresAgregados = (List<Jugador>)Session["JugadoresAgregados"];
-            rptJugadoresAgregados.DataSource = jugadoresAgregados;
-            rptJugadoresAgregados.DataBind();
+            //rptJugadoresAgregados.DataSource = jugadoresAgregados;
+            //rptJugadoresAgregados.DataBind();
         }
 
 
@@ -137,8 +137,8 @@ namespace TPC_equipo_12b
 
                 Session["JugadoresAgregados"] = jugadoresAgregados;
 
-                rptJugadoresAgregados.DataSource = jugadoresAgregados;
-                rptJugadoresAgregados.DataBind();
+                //rptJugadoresAgregados.DataSource = jugadoresAgregados;
+                //rptJugadoresAgregados.DataBind();
             }
         }
         protected void btnSaveLiga_Click(object sender, EventArgs e)
@@ -159,21 +159,26 @@ namespace TPC_equipo_12b
 
             if (ligaId > 0)
             {
-                bool asociacionExitosa = negocio.AsociarJugadoresALiga(ligaId, jugadoresAgregados);
+                hiddenMessage.Value = $"Liga {(isEdit ? "editada" : "creada")} correctamente.";
+                CargarLigas();
+                txtLigaNombre.Text = string.Empty;
+                ListaLigas = negocio.listarLigas();
+                Session["JugadoresAgregados"] = null;
+                //bool asociacionExitosa = negocio.AsociarJugadoresALiga(ligaId, jugadoresAgregados);
 
-                if (asociacionExitosa)
-                {
-                    hiddenMessage.Value = $"Liga {(isEdit ? "editada" : "creada")} correctamente.";
-                    CargarLigas();
-                    txtLigaNombre.Text = string.Empty;
-                    ListaLigas = negocio.listarLigas();
-                    Session["JugadoresAgregados"] = null;
-                }
-                else
-                {
-                    //hiddenMessage.Value = "Liga creada, pero falló la asociación con los jugadores!";
-                    hiddenMessage.Value = $"Liga {(isEdit ? "editada" : "creada")}, pero falló la asociación con los jugadores!";
-                }
+                //if (asociacionExitosa)
+                //{
+                //    hiddenMessage.Value = $"Liga {(isEdit ? "editada" : "creada")} correctamente.";
+                //    CargarLigas();
+                //    txtLigaNombre.Text = string.Empty;
+                //    ListaLigas = negocio.listarLigas();
+                //    Session["JugadoresAgregados"] = null;
+                //}
+                //else
+                //{
+                //    //hiddenMessage.Value = "Liga creada, pero falló la asociación con los jugadores!";
+                //    hiddenMessage.Value = $"Liga {(isEdit ? "editada" : "creada")}, pero falló la asociación con los jugadores!";
+                //}
             }
             else
             {

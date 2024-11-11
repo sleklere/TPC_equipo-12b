@@ -24,13 +24,31 @@ namespace TPC_equipo_12b
         protected global::System.Web.UI.WebControls.DropDownList ddlJugador1;
 
         /// <summary>
-        /// lblJugador1Nombre control.
+        /// lblVDHistoricoJ1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblJugador1Nombre;
+        protected global::System.Web.UI.WebControls.Label lblVDHistoricoJ1;
+
+        /// <summary>
+        /// lblJugador1TotalPartidos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblJugador1TotalPartidos;
+
+        /// <summary>
+        /// porcentajeVictoriasJ1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label porcentajeVictoriasJ1;
 
         /// <summary>
         /// lblJugador1Victorias control.
@@ -60,13 +78,40 @@ namespace TPC_equipo_12b
         protected global::System.Web.UI.WebControls.DropDownList ddlJugador2;
 
         /// <summary>
-        /// lblJugador2Nombre control.
+        /// lblVDHistoricoJ2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblJugador2Nombre;
+        protected global::System.Web.UI.WebControls.Label lblVDHistoricoJ2;
+
+        /// <summary>
+        /// lblJugador2TotalPartidos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblJugador2TotalPartidos;
+
+        /// <summary>
+        /// porcentajeVictoriasJ2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label porcentajeVictoriasJ2;
+
+        /// <summary>
+        /// rptPartidos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptPartidos;
 
         /// <summary>
         /// hiddenMessage control.
