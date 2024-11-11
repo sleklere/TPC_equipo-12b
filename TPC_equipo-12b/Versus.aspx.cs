@@ -14,10 +14,17 @@ namespace TPC_equipo_12b
         VersusDTO datosVersus;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (Session["Jugador"] == null)
             {
-                CargarJugadores();
+                Response.Redirect("~/AccesoDenegado.aspx");
+            } else
+            {
+                if (!IsPostBack)
+                {
+                    CargarJugadores();
+                }
             }
+            
         }
 
         private void CargarJugadores()

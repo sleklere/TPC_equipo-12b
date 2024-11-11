@@ -3,6 +3,7 @@ using Dominio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +11,106 @@ namespace Negocio
 {
     public class JugadorNegocio
     {
+
+        public bool CrearJugador(Jugador jugador)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
+
+            try
+            {
+                datos.SetearConsulta("INSERT INTO Jugador (nombre, apellido, username, password, email, fecha_creacion) VALUES (@nombre, @apellido, @username, @password, @email, @fecha_creacion)");
+
+                datos.AgregarParametro("@nombre", jugador.Nombre);
+                datos.AgregarParametro("@apellido", jugador.Apellido);
+                datos.AgregarParametro("@username", jugador.Username);
+                datos.AgregarParametro("@password", jugador.Password);
+                datos.AgregarParametro("@email", jugador.Email);
+                datos.AgregarParametro("@fecha_creacion", DateTime.Now);
+
+                datos.EjecutarAccion();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al crear el jugador: " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public bool emailExistente(string email)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
+
+            try
+            {
+                // Configurar la consulta para verificar si el email ya existe
+                datos.SetearConsulta("SELECT * FROM JUGADOR WHERE email = @email");
+                datos.AgregarParametro("@email", email);
+
+                // Ejecutar la lectura en lugar de una acción de escritura
+                datos.EjecutarLectura();
+
+                // Verificar si se ha encontrado algún resultado
+                if (datos.Lector != null && datos.Lector.Read())
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al verificar el email: " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public Jugador Login(string email, string password)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
+
+            try
+            {
+                datos.SetearConsulta("SELECT * FROM Jugador WHERE email = @email AND password = @password");
+                datos.AgregarParametro("@email", email);
+                datos.AgregarParametro("@password", password);
+
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    Jugador jugador = new Jugador
+                    {
+                        Id = (int)datos.Lector["id"],
+                        Nombre = datos.Lector["nombre"].ToString(),
+                        Apellido = datos.Lector["apellido"].ToString(),
+                        Username = datos.Lector["username"].ToString(),
+                        Password = datos.Lector["password"].ToString(),
+                        Email = datos.Lector["email"].ToString(),
+                    };
+                    return jugador;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al iniciar sesion: " + ex.Message);
+                return null;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
 
         public Jugador findJugadorByCodigo(string codigo)
         {

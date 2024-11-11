@@ -41,7 +41,15 @@ namespace TPC_equipo_12b
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            CargarLigas();
+            if (Session["Jugador"] == null)
+            {
+                Response.Redirect("~/AccesoDenegado.aspx");
+            }
+            else
+            {
+                CargarLigas();
+            }
+            
         }
 
         protected void btnBuscarJugador_Click(object sender, EventArgs e)

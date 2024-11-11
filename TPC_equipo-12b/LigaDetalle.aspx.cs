@@ -14,18 +14,25 @@ namespace TPC_equipo_12b
         public List<Jugador> ListaJugadores { get; set; }
         protected void Page_Load(object sender, EventArgs e)
         {
-            ListaJugadores = new List<Jugador>();
-            if (!IsPostBack)
+            if (Session["Jugador"] == null)
             {
-                if (Request.QueryString["id"] != null)
+                Response.Redirect("~/AccesoDenegado.aspx");
+            } else
+            {
+                ListaJugadores = new List<Jugador>();
+                if (!IsPostBack)
                 {
+                    if (Request.QueryString["id"] != null)
+                    {
 
-                    LigaNegocio negocio = new LigaNegocio();
-                    string ligaId = Request.QueryString["id"].ToString();
+                        LigaNegocio negocio = new LigaNegocio();
+                        string ligaId = Request.QueryString["id"].ToString();
 
-                    ListaJugadores = negocio.getJugadoresByLigaId(ligaId);
+                        ListaJugadores = negocio.getJugadoresByLigaId(ligaId);
+                    }
                 }
             }
+            
         }
     }
 }

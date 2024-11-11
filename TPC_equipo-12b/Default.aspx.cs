@@ -19,6 +19,18 @@ namespace TPC_equipo_12b
                 CargarJugadores();
                 CargarPartidos();
             }
+
+            if (Session["Jugador"] != null)
+            {
+                var jugador = (Jugador)Session["Jugador"];
+                System.Diagnostics.Debug.WriteLine("Jugador en inicio:");
+                System.Diagnostics.Debug.WriteLine("ID: " + jugador.Id);
+                System.Diagnostics.Debug.WriteLine("Nombre: " + jugador.Nombre);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("La sesión 'Jugador' está vacía.");
+            }
         }
 
         private void CargarLigas()

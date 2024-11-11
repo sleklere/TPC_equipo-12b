@@ -38,21 +38,30 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                         <div class="navbar-nav ms-auto">
-                            <a runat="server" class="nav-link active text-light fw-bold d-flex align-items-center" href="~/">
-                                <i class="bi bi-house-door me-2"></i>Inicio
-                            </a>
-                            <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Ligas.aspx">
-                                <i class="bi bi-trophy me-2"></i>Ligas
-                            </a>
-                            <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Torneos.aspx">
-                                <i class="bi bi-award me-2"></i>Torneos
-                            </a>
-                            <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Versus.aspx">
-                                <i class="bi bi-people me-2"></i>Jugador VS Jugador
-                            </a>
-                            <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Perfil.aspx">
-                                <i class="bi bi-person-circle me-2"></i>Perfil
-                            </a>
+                              <a runat="server" class="nav-link active text-light fw-bold d-flex align-items-center" href="~/">
+                                  <i class="bi bi-house-door me-2"></i>Inicio
+                              </a>
+                              <% if (Session["Jugador"] != null) { %>
+                                 <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Ligas.aspx">
+                                     <i class="bi bi-trophy me-2"></i>Ligas
+                                 </a>
+                                 <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Torneos.aspx">
+                                     <i class="bi bi-award me-2"></i>Torneos
+                                 </a>
+                                 <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Versus.aspx">
+                                     <i class="bi bi-people me-2"></i>Jugador VS Jugador
+                                 </a>
+                                  <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Profile.aspx">
+                                      <i class="bi bi-person-circle me-2"></i>Perfil
+                                  </a>
+                              <% } else { %>
+                                  <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Login.aspx">
+                                      Iniciar Sesión
+                                  </a>
+                                  <a runat="server" class="nav-link text-light fw-bold d-flex align-items-center" href="~/Register.aspx">
+                                      Registrarse
+                                  </a>
+                              <% } %>
                         </div>
                     </div>
                 </div>
@@ -64,12 +73,12 @@
         </div>
     </form>
 
-    <div id="successMessage" class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3" role="alert" style="display: none;">
+    <div id="successMessage" class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x m-3" role="alert" style="display: none;">
         <span id="successMessageText"></span>
         <button type="button" class="btn-close" onclick="hideSuccessMessage()" aria-label="Close"></button>
     </div>
 
-    <div id="errorMessage" class="alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3" role="alert" style="display: none;">
+    <div id="errorMessage" class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x m-3" role="alert" style="display: none;">
         <span id="errorMessageText"></span>
         <button type="button" class="btn-close" onclick="hideErrorMessage()" aria-label="Close"></button>
     </div>
