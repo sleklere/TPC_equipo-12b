@@ -12,6 +12,7 @@ namespace TPC_equipo_12b
     public partial class LigaDetalle : System.Web.UI.Page
     {
         public List<Jugador> ListaJugadores { get; set; }
+        public Liga LigaData;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["Jugador"] == null)
@@ -28,7 +29,10 @@ namespace TPC_equipo_12b
                         LigaNegocio negocio = new LigaNegocio();
                         string ligaId = Request.QueryString["id"].ToString();
 
+                        LigaData = negocio.getLigaById(int.Parse(ligaId)); 
                         ListaJugadores = negocio.getJugadoresByLigaId(ligaId);
+
+                        txtCodigoLiga.Text = LigaData.Codigo;
                     }
                 }
             }

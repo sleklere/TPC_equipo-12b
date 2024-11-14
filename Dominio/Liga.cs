@@ -11,6 +11,7 @@ namespace Dominio
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string FechaCreacion { get; set; }
+        public string Codigo { get; set; }
         public List<Jugador> Jugadores { get; set; } = new List<Jugador>();
     }
 }

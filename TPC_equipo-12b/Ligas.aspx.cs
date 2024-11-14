@@ -21,17 +21,6 @@ namespace TPC_equipo_12b
             LigaNegocio negocio = new LigaNegocio();
             ListaLigas = negocio.listarLigas();
 
-            if (!IsPostBack)
-            {
-                jugadoresAgregados = new List<Jugador>();
-                Session["JugadoresAgregados"] = jugadoresAgregados;
-                CargarJugadoresAgregados();
-            }
-            else
-            {
-                jugadoresAgregados = (List<Jugador>)Session["JugadoresAgregados"];
-            }
-
             if (ListaLigas != null && ListaLigas.Count > 0)
             {
                 rptLigas.DataSource = ListaLigas;
@@ -49,60 +38,74 @@ namespace TPC_equipo_12b
             {
                 CargarLigas();
             }
-            
+
         }
-
-        //protected void btnBuscarJugador_Click(object sender, EventArgs e)
-        //{
-        //    JugadorNegocio jugadorNegocio = new JugadorNegocio();
-        //    string codigoJugador = txtCodigoJugador.Text.Trim();
-        //    lblMensajeBusqueda.Visible = false;
-
-        //    Jugador jugador = jugadorNegocio.findJugadorByCodigo(codigoJugador);
-
-        //    if (jugador != null)
-        //    {
-        //        if (!jugadoresAgregados.Any(j => j.Codigo == codigoJugador))
-        //        {
-        //            jugadoresAgregados.Add(jugador);
-        //            Session["JugadoresAgregados"] = jugadoresAgregados;
-        //            CargarJugadoresAgregados(); // recargar el Repeater
-        //            lblMensajeBusqueda.Text = $"Jugador con código {codigoJugador} encontrado y agregado.";
-        //            lblMensajeBusqueda.CssClass = "text-success";
-        //        }
-        //        else
-        //        {
-        //            lblMensajeBusqueda.Text = $"El jugador con código {codigoJugador} ya fue agregado.";
-        //            lblMensajeBusqueda.CssClass = "text-warning";
-        //        }
-        //    }
-        //    else
-        //    {
-        //        lblMensajeBusqueda.Text = $"No se encontró un jugador con el código {codigoJugador}.";
-        //        lblMensajeBusqueda.CssClass = "text-danger";
-        //    }
-
-        //    lblMensajeBusqueda.Visible = true;
-        //}
-        protected void CargarJugadoresAgregados()
-        {
-            jugadoresAgregados = (List<Jugador>)Session["JugadoresAgregados"];
-            //rptJugadoresAgregados.DataSource = jugadoresAgregados;
-            //rptJugadoresAgregados.DataBind();
-        }
-
 
         protected void btnCrearLiga_Click(object sender, EventArgs e)
         {
             lblModalTitle.Text = "Crear Nueva Liga";
             hfLigaId.Value = string.Empty;
             txtLigaNombre.Text = string.Empty;
-            jugadoresAgregados.Clear();
-            Session["JugadoresAgregados"] = jugadoresAgregados;
-            CargarJugadoresAgregados();
 
             ScriptManager.RegisterStartupScript(this, GetType(), "showCreateModal", "openUpdateModal();", true);
         }
+
+        protected void btnUnirseLiga_Click(object sender, EventArgs e)
+        {
+            LigaNegocio ligaNegocio = new LigaNegocio();
+            lblModalTitle.Text = "Unirse a una liga";
+            hfLigaId.Value = string.Empty;
+            txtLigaNombre.Text = string.Empty;
+            Jugador jugadorSesion = (Jugador)Session["Jugador"];
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "showJoinModal", "openJoinModal();", true);
+        }
+
+        protected void btnJoinLiga_Click(object sender, EventArgs e)
+        {
+            string ligaCodigo = txtCodigoLiga.Text;
+            LigaNegocio negocio = new LigaNegocio();
+            Jugador jugadorSesion = (Jugador)Session["Jugador"];
+
+            // buscar liga con codigo ingresado
+            Liga liga = negocio.getLigaByCodigo(ligaCodigo);
+            // si no se encuentra avisar
+            if (liga == null)
+            {
+                hiddenMessage.Value = "No se encontró ninguna liga con el código ingresado.";
+                hiddenMessageType.Value = "error";
+            }
+            else
+            {
+                // si se encuentra
+                // chequear que el jugador no este unido a la liga
+                if (liga.Jugadores.Find(j => j.Id == jugadorSesion.Id) != null)
+                {
+                    // si lo esta avisar
+                    hiddenMessage.Value = "Ya estás participando en la liga.";
+                    hiddenMessageType.Value = "error";
+                }
+                else
+                {
+                    // si no lo esta asociarlo
+                    bool jugadorAsociado = negocio.AsociarJugadorALiga(liga.Id, jugadorSesion.Id);
+
+                    if (jugadorAsociado)
+                    {
+                        hiddenMessage.Value = "Te has unido a la liga.";
+                        hiddenMessageType.Value = "success";
+                        CargarLigas();
+                    }
+                    else
+                    {
+                        hiddenMessage.Value = "Error al unirse a la liga.";
+                        hiddenMessageType.Value = "error";
+                    }
+
+                }
+            }
+        }
+
         protected void btnEditarLiga_Command(object sender, CommandEventArgs e)
         {
             int ligaId = Convert.ToInt32(e.CommandArgument);
@@ -116,37 +119,16 @@ namespace TPC_equipo_12b
                 hfLigaId.Value = ligaId.ToString(); // asignar id al campo oculto
                 txtLigaNombre.Text = liga.Nombre;
 
-                // cargar los jugadores
-                jugadoresAgregados = liga.Jugadores;
-                Session["JugadoresAgregados"] = jugadoresAgregados;
-                CargarJugadoresAgregados();
-
                 ScriptManager.RegisterStartupScript(this, GetType(), "showEditModal", "openUpdateModal();", true);
             }
         }
 
-        protected void rptJugadoresAgregados_ItemCommand(object source, RepeaterCommandEventArgs e)
-        {
-            if (e.CommandName == "Eliminar")
-            {
-                int jugadorId = int.Parse(e.CommandArgument.ToString());
-
-                List<Jugador> jugadoresAgregados = Session["JugadoresAgregados"] as List<Jugador> ?? new List<Jugador>();
-
-                jugadoresAgregados.RemoveAll(j => j.Id == jugadorId);
-
-                Session["JugadoresAgregados"] = jugadoresAgregados;
-
-                //rptJugadoresAgregados.DataSource = jugadoresAgregados;
-                //rptJugadoresAgregados.DataBind();
-            }
-        }
         protected void btnSaveLiga_Click(object sender, EventArgs e)
         {
             string ligaNombre = txtLigaNombre.Text;
             LigaNegocio negocio = new LigaNegocio();
-            List<Jugador> jugadoresAgregados = Session["JugadoresAgregados"] as List<Jugador> ?? new List<Jugador>();
             bool isEdit = int.TryParse(hfLigaId.Value, out int ligaId) && ligaId > 0;
+            Jugador jugadorSesion = (Jugador)Session["Jugador"];
 
             if (isEdit)
             {
@@ -159,30 +141,31 @@ namespace TPC_equipo_12b
 
             if (ligaId > 0)
             {
-                hiddenMessage.Value = $"Liga {(isEdit ? "editada" : "creada")} correctamente.";
-                CargarLigas();
                 txtLigaNombre.Text = string.Empty;
-                ListaLigas = negocio.listarLigas();
-                Session["JugadoresAgregados"] = null;
-                //bool asociacionExitosa = negocio.AsociarJugadoresALiga(ligaId, jugadoresAgregados);
 
-                //if (asociacionExitosa)
-                //{
-                //    hiddenMessage.Value = $"Liga {(isEdit ? "editada" : "creada")} correctamente.";
-                //    CargarLigas();
-                //    txtLigaNombre.Text = string.Empty;
-                //    ListaLigas = negocio.listarLigas();
-                //    Session["JugadoresAgregados"] = null;
-                //}
-                //else
-                //{
-                //    //hiddenMessage.Value = "Liga creada, pero falló la asociación con los jugadores!";
-                //    hiddenMessage.Value = $"Liga {(isEdit ? "editada" : "creada")}, pero falló la asociación con los jugadores!";
-                //}
+                if (!isEdit)
+                {
+                    bool jugadorAsociado = negocio.AsociarJugadorALiga(ligaId, jugadorSesion.Id);
+
+                    if (jugadorAsociado)
+                    {
+                        hiddenMessage.Value = "Liga creada correctamente.";
+                        hiddenMessageType.Value = "success";
+                        CargarLigas();
+                    }
+                }
+                else
+                {
+                    hiddenMessage.Value = $"Liga editada correctamente.";
+                    hiddenMessageType.Value = "success";
+                    CargarLigas();
+                }
+                ListaLigas = negocio.listarLigas();
             }
             else
             {
                 hiddenMessage.Value = $"Error en la {(isEdit ? "edición" : "creación")} de la liga!";
+                hiddenMessageType.Value = "error";
             }
         }
 
@@ -201,10 +184,12 @@ namespace TPC_equipo_12b
                     {
                         CargarLigas();
                         hiddenMessage.Value = "Liga eliminada correctamente.";
+                        hiddenMessageType.Value = "success";
                     }
                     else
                     {
                         hiddenMessage.Value = "Error en la eliminación";
+                        hiddenMessageType.Value = "error";
                     }
 
                 }

@@ -1,8 +1,16 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master.Master" AutoEventWireup="true" CodeBehind="LigaDetalle.aspx.cs" Inherits="TPC_equipo_12b.LigaDetalle" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <h1>Detalles de la Liga</h1>
+    <div class="d-flex justify-content-start gap-4 align-items-center m-4">
+    <h1 class="display-6 text-primary fw-bold text-uppercase pb-2 mb-0"><%= LigaData.Nombre %></h1>
+    <div class="input-group mb-3" style="max-width: 300px;">
+        <asp:TextBox ID="txtCodigoLiga" runat="server" CssClass="form-control" ReadOnly="true" Text=''></asp:TextBox>
+        <button type="button" class="btn btn-outline-secondary" onclick="copiarCodigo()">Copiar</button>
+    </div>
+    </div>
+
     <h3>Jugadores</h3>
     <div class="table-responsive">
         <table class="table table-striped">
@@ -30,4 +38,16 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        function copiarCodigo() {
+            var codigoTextBox = document.getElementById('<%= txtCodigoLiga.ClientID %>');
+
+            codigoTextBox.select();
+
+            document.execCommand("copy");
+
+            showSuccessMessage("Código copiado");
+        }
+    </script>
 </asp:Content>

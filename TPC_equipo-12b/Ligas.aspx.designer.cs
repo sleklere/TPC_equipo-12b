@@ -24,6 +24,15 @@ namespace TPC_equipo_12b
         protected global::System.Web.UI.WebControls.Button btnCrearLiga;
 
         /// <summary>
+        /// btnUnirseLiga control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnUnirseLiga;
+
+        /// <summary>
         /// rptLigas control.
         /// </summary>
         /// <remarks>
@@ -69,6 +78,33 @@ namespace TPC_equipo_12b
         protected global::System.Web.UI.WebControls.Button btnSaveLiga;
 
         /// <summary>
+        /// joinModalTitleLbl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label joinModalTitleLbl;
+
+        /// <summary>
+        /// txtCodigoLiga control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCodigoLiga;
+
+        /// <summary>
+        /// btnJoinLiga control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnJoinLiga;
+
+        /// <summary>
         /// Button2 control.
         /// </summary>
         /// <remarks>
@@ -94,5 +130,14 @@ namespace TPC_equipo_12b
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hiddenMessage;
+
+        /// <summary>
+        /// hiddenMessageType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hiddenMessageType;
     }
 }

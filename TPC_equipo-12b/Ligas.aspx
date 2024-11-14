@@ -7,7 +7,10 @@
 
     <div class="d-flex justify-content-between align-items-center m-4">
         <h1 class="display-6 text-primary fw-bold text-uppercase border-bottom pb-2 mb-0">Ligas</h1>
-        <asp:Button ID="btnCrearLiga" runat="server" Text="Crear Liga" CssClass="btn btn-primary" OnClick="btnCrearLiga_Click" />
+        <div class="d-flex justify-content-end gap-4 align-items-center">
+            <asp:Button ID="btnCrearLiga" runat="server" Text="Crear Liga" CssClass="btn btn-primary" OnClick="btnCrearLiga_Click" />
+            <asp:Button ID="btnUnirseLiga" runat="server" Text="Unirse a liga" CssClass="btn btn-primary" OnClick="btnUnirseLiga_Click" />
+        </div>
     </div>
 
     <div class="row row-cols-1 row-cols-md-2 g-4 mx-4">
@@ -22,7 +25,7 @@
                                 <a href='<%# "LigaDetalle.aspx?id=" + Eval("Id") %>' class="btn btn-outline-primary">Ver</a>
                                 <asp:Button ID="btnEditarLiga" runat="server" Text="Editar" CssClass="btn btn-secondary btn-sm"
                                     CommandName="Editar" CommandArgument='<%# Eval("Id") %>' OnCommand="btnEditarLiga_Command" />
-                    <asp:Button ID="btnDeleteLiga" runat="server" Text="Eliminar" CssClass="btn btn-danger" OnClientClick="setLigaIdAndOpenModal(this, 'delete'); return false;" data-ligaid='<%# Eval("Id") %>' />
+                                <asp:Button ID="btnDeleteLiga" runat="server" Text="Eliminar" CssClass="btn btn-danger" OnClientClick="setLigaIdAndOpenModal(this, 'delete'); return false;" data-ligaid='<%# Eval("Id") %>' />
                             </div>
                         </div>
                     </div>
@@ -47,7 +50,7 @@
                 <div class="modal-body">
                     <asp:TextBox ID="txtLigaNombre" runat="server" CssClass="form-control mb-3" placeholder="Nombre de la liga"></asp:TextBox>
 
-<%--                    <asp:UpdatePanel ID="UpdatePanelBuscarJugador" runat="server">
+                    <%--                    <asp:UpdatePanel ID="UpdatePanelBuscarJugador" runat="server">
                         <ContentTemplate>
                             <div class="input-group mb-3">
                                 <asp:TextBox ID="txtCodigoJugador" runat="server" CssClass="form-control" placeholder="Código del jugador"></asp:TextBox>
@@ -79,23 +82,48 @@
         </div>
     </div>
 
-      <div id="deleteModal" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-     <div class="modal-dialog modal-dialog-centered">
-         <div class="modal-content">
-             <div class="modal-header">
-                 <h5 class="modal-title" id="modalDeleteLabel">Eliminar Liga</h5>
-                 <button type="button" class="btn-close" aria-label="Close" onclick="closeUpdateModal()"></button>
-             </div>
-             <div class="modal-footer">
-                 <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
-                 <asp:Button ID="Button2" runat="server" CssClass="btn btn-primary" Text="Eliminar" OnClientClick="closeDeleteModal();" OnClick="deleteLiga_Click" />
-             </div>
-             </div>
-         </div>
-     </div>
+    <div id="joinModal" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+
+        <%-- diferenciar entre creacion y edicion --%>
+        <%--<asp:HiddenField ID="hfLigaId" runat="server" />--%>
+
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="joinModalLabel">
+                        <asp:Label ID="joinModalTitleLbl" runat="server" Text="Unirse a una liga"></asp:Label>
+                    </h5>
+                    <button type="button" class="btn-close" aria-label="Close" onclick="closeJoinModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <asp:TextBox ID="txtCodigoLiga" runat="server" CssClass="form-control mb-3" placeholder="Código de la liga"></asp:TextBox>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeJoinModal()">Cancelar</button>
+                    <asp:Button ID="btnJoinLiga" runat="server" CssClass="btn btn-primary" Text="Guardar" OnClick="btnJoinLiga_Click" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDeleteLabel">Eliminar Liga</h5>
+                    <button type="button" class="btn-close" aria-label="Close" onclick="closeUpdateModal()"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
+                    <asp:Button ID="Button2" runat="server" CssClass="btn btn-primary" Text="Eliminar" OnClientClick="closeDeleteModal();" OnClick="deleteLiga_Click" />
+                </div>
+            </div>
+        </div>
+    </div>
 
     <asp:HiddenField ID="hiddenLigaId" runat="server" />
     <asp:HiddenField ID="hiddenMessage" runat="server" />
+    <asp:HiddenField ID="hiddenMessageType" runat="server" />
 
     <script>
         function openModal() {
@@ -110,6 +138,12 @@
             modal.classList.remove("show");
         }
 
+        function closeJoinModal() {
+            var modal = document.getElementById("joinModal");
+            modal.style.display = "none";
+            modal.classList.remove("show");
+        }
+
         function setLigaIdAndOpenModal(button, action) {
             var ligaId = button.getAttribute("data-ligaid");
             document.getElementById('<%= hiddenLigaId.ClientID %>').value = ligaId;
@@ -119,6 +153,18 @@
             } else {
                 openDeleteModal();
             }
+        }
+
+        function openJoinModal() {
+            var modal = document.getElementById("joinModal");
+            modal.style.display = "block";
+            modal.classList.add("show");
+        }
+
+        function closeJoinModal() {
+            var modal = document.getElementById("joinModal");
+            modal.style.display = "none";
+            modal.classList.remove("show");
         }
 
         function openUpdateModal() {
@@ -146,14 +192,17 @@
         }
 
         window.onload = function () {
-        var message = document.getElementById('<%= hiddenMessage.ClientID %>').value;
-        if (message) {
-            if (message.includes("correctamente")) {
-                showSuccessMessage(message);
-            } else {
-                showErrorMessage(message);
-            }
+            var message = document.getElementById('<%= hiddenMessage.ClientID %>').value;
+            var messageType = document.getElementById('<%= hiddenMessageType.ClientID %>').value;
+
+            if (message) {
+                if (messageType === "success") {
+                    showSuccessMessage(message);
+                } else if (messageType === "error") {
+                    showErrorMessage(message);
+                }
                 document.getElementById('<%= hiddenMessage.ClientID %>').value = '';
+                document.getElementById('<%= hiddenMessageType.ClientID %>').value = '';
             }
         };
     </script>
