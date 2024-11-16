@@ -13,24 +13,28 @@ namespace TPC_equipo_12b
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+
+            if (Session["Jugador"] == null)
             {
-                CargarLigas();
-                CargarJugadores();
-                CargarPartidos();
+                Response.Redirect("~/AccesoDenegado.aspx");
+            } else
+            {
+                if (!IsPostBack)
+                {
+                    CargarLigas();
+                    CargarJugadores();
+                    CargarPartidos();
+                }
             }
 
-            if (Session["Jugador"] != null)
-            {
-                var jugador = (Jugador)Session["Jugador"];
-                System.Diagnostics.Debug.WriteLine("Jugador en inicio:");
-                System.Diagnostics.Debug.WriteLine("ID: " + jugador.Id);
-                System.Diagnostics.Debug.WriteLine("Nombre: " + jugador.Nombre);
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("La sesión 'Jugador' está vacía.");
-            }
+            //if (Session["Jugador"] != null)
+            //{
+            //    var jugador = (Jugador)Session["Jugador"];
+            //    System.Diagnostics.Debug.WriteLine("Jugador en inicio:");
+            //    System.Diagnostics.Debug.WriteLine("ID: " + jugador.Id);
+            //    System.Diagnostics.Debug.WriteLine("Nombre: " + jugador.Nombre);
+            //}
+         
         }
 
         private void CargarLigas()

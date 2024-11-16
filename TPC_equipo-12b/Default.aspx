@@ -8,7 +8,7 @@
         <h1 class="display-6 text-primary fw-bold text-uppercase border-bottom pb-2 mb-0">Gestión de Partidos</h1>
     </div>
 
-    <asp:Panel ID="panelFormularioPartido" runat="server" CssClass="mb-4">
+    <asp:Panel ID="panelFormularioPartido" runat="server" CssClass="wi mb-4" Style="width: 80%; margin: 0 auto;">
         <h3>
             <asp:Label ID="lblFormularioTitulo" runat="server" Text="Crear Partido"></asp:Label></h3>
 

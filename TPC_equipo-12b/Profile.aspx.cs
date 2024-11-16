@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Dominio;
+using Negocio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,6 +16,17 @@ namespace TPC_equipo_12b
             if (Session["Jugador"] == null)
             {
                 Response.Redirect("~/AccesoDenegado.aspx");
+            } else
+            {
+                Jugador jugador = (Jugador)Session["Jugador"];
+                int idJugador = jugador.Id;
+
+                PartidoNegocio negocio = new PartidoNegocio();
+
+                List<PartidoDTO> list = negocio.Ultimos10PartidosByJugadorID(idJugador);
+
+                PartidosRepeater.DataSource = list;
+                PartidosRepeater.DataBind();
             }
         }
 

@@ -284,6 +284,67 @@ namespace Negocio
             return versus;
         }
 
+        public List<PartidoDTO> Ultimos10PartidosByJugadorID(int idJugador)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
+            List<PartidoDTO> partidos = new List<PartidoDTO>();
+
+            try
+            {
+                datos.SetearConsulta(@"
+            SELECT TOP 10 
+                p.id AS PartidoId,
+                p.fecha,
+                j1.nombre AS NombreJugador1,
+                j1.apellido AS ApellidoJugador1,
+                pj1.puntos AS PuntosJugador1,
+                j2.nombre AS NombreJugador2,
+                j2.apellido AS ApellidoJugador2,
+                pj2.puntos AS PuntosJugador2,
+                CASE 
+                    WHEN p.ganador_id = @IdJugador THEN 1
+                    ELSE 0 
+                 END AS EsGanador
+            FROM Partido p
+            JOIN Partido_Jugador pj1 ON p.id = pj1.partido_id
+            JOIN Partido_Jugador pj2 ON p.id = pj2.partido_id AND pj1.jugador_id > pj2.jugador_id
+            JOIN Jugador j1 ON pj1.jugador_id = j1.id
+            JOIN Jugador j2 ON pj2.jugador_id = j2.id
+            WHERE pj1.jugador_id = @IdJugador OR pj2.jugador_id = @IdJugador
+            ORDER BY p.fecha DESC");
+
+                datos.AgregarParametro("@IdJugador", idJugador);
+
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    PartidoDTO partido = new PartidoDTO
+                    {
+                        PartidoId = (int)datos.Lector["PartidoId"],
+                        Fecha = (DateTime)datos.Lector["fecha"],
+                        NombreJugador1 = datos.Lector["NombreJugador1"].ToString(),
+                        ApellidoJugador1 = datos.Lector["ApellidoJugador1"].ToString(),
+                        PuntosJugador1 = (int)datos.Lector["PuntosJugador1"],
+                        NombreJugador2 = datos.Lector["NombreJugador2"].ToString(),
+                        ApellidoJugador2 = datos.Lector["ApellidoJugador2"].ToString(),
+                        PuntosJugador2 = (int)datos.Lector["PuntosJugador2"],
+                        EsGanador = Convert.ToBoolean(datos.Lector["EsGanador"])
+                    };
+                    partidos.Add(partido);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al obtener los partidos: " + ex.Message);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+            return partidos;
+
+        }
 
     }
 }
