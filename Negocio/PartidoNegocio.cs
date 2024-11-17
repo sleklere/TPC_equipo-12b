@@ -189,10 +189,14 @@ namespace Negocio
 
                 if (ganadorIdNuevo != ganadorId)
                 {
+                    datos = new AccesoDatosDB();
+
                     datos.SetearConsulta("UPDATE PARTIDO SET ganador_id = @NuevoGanadorId WHERE id = @PartidoId");
                     datos.AgregarParametro("@NuevoGanadorId", ganadorIdNuevo);
                     datos.AgregarParametro("@PartidoId", partidoId);
                     datos.EjecutarAccion();
+
+                    datos.CerrarConexion();
                 }
 
                 return true;
@@ -218,9 +222,15 @@ namespace Negocio
                 datos.AgregarParametro("@partido_id", partidoId);
                 datos.EjecutarAccion();
 
+                datos.CerrarConexion();
+
+                datos = new AccesoDatosDB();
+
                 datos.SetearConsulta("DELETE FROM PARTIDO WHERE id = @id");
                 datos.AgregarParametro("@id", partidoId);
                 datos.EjecutarAccion();
+
+                datos.CerrarConexion();
 
                 return true;
             }

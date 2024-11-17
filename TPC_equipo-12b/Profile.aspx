@@ -27,7 +27,7 @@
                         <% } %>
                     </div>
                     <div class="card-footer d-flex justify-content-between">
-                        <asp:Button ID="btnEditar" runat="server" Text="Editar Perfil" CssClass="btn btn-warning" OnClick="btnEditar_Click" />
+                        <asp:Button ID="btnEditar" runat="server" Text="Editar Perfil" CssClass="btn btn-warning" OnClick="btnEditarTraerDatos_Click"/>
                         <asp:Button ID="btnCerrarSesion" runat="server" Text="Cerrar Sesión" CssClass="btn btn-danger" OnClick="btnCerrarSesion_Click" />
                     </div>
                 </div>
@@ -35,7 +35,51 @@
         </div>
          <div class="container my-4">
         <h2 class="mb-4">Últimos 10 Partidos</h2>
+
         
+        <%--MODAL EDITAR PERFIL--%>
+        <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalFormularioPartidoLabel">Editar Perfil</h5>
+                        <button type="button" class="btn-close" aria-label="Close" onclick="closeUpdateModal()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <asp:Panel ID="panelEditPartido" runat="server" CssClass="wi mb-4">
+
+                            <div class="mb-3">
+                                <label for="txtNombre" class="form-label">Nombre:</label>
+                                <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control"></asp:TextBox>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="txtApellido" class="form-label">Apellido:</label>
+                                <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control"></asp:TextBox>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="txtUsername" class="form-label">Username:</label>
+                                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control"></asp:TextBox>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="txtEmail" class="form-label">Email:</label>
+                                <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control"></asp:TextBox>
+                            </div>
+
+                        </asp:Panel>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeUpdateModal()">Cancelar</button>
+                        <asp:Button ID="btnSaveEditPartido" runat="server" Text="Guardar Cambios" CssClass="btn btn-primary" OnClick="btnUpdatePerfil_Click" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <%--LISTADO ULTIMOS 10 PARTIDOS--%>
         <asp:Repeater ID="PartidosRepeater" runat="server">
             <ItemTemplate>
                 <div class="card mb-3">
@@ -60,4 +104,33 @@
         </asp:Repeater>
     </div>
     </div>
+
+    <asp:HiddenField ID="hiddenMessage" runat="server" />
+    <asp:HiddenField ID="hiddenMessageType" runat="server" />
+
+    <script>
+        function openUpdateModal() {
+            var modal = document.getElementById("updateModal");
+            modal.style.display = "block";
+            modal.classList.add("show");
+        }
+
+        function closeUpdateModal() {
+            var modal = document.getElementById("updateModal");
+            modal.style.display = "none";
+            modal.classList.remove("show");
+        }
+
+        window.onload = function () {
+            var message = document.getElementById('<%= hiddenMessage.ClientID %>').value;
+            if (message) {
+                if (message.includes("correctamente")) {
+                    showSuccessMessage(message);
+                } else {
+                    showErrorMessage(message);
+                }
+                document.getElementById('<%= hiddenMessage.ClientID %>').value = '';
+            }
+        };
+    </script>
 </asp:Content>

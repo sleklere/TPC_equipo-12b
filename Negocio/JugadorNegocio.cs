@@ -147,6 +147,58 @@ namespace Negocio
             }
         }
 
+        public Jugador UpdateJugador(int id, string nombre, string apellido, string username, string email)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
+
+            try
+            {
+                datos.SetearConsulta("UPDATE Jugador SET nombre = @nombre, apellido = @apellido, username = @username, email = @email WHERE id = @id");
+                datos.AgregarParametro("@nombre", nombre);
+                datos.AgregarParametro("@apellido", apellido);
+                datos.AgregarParametro("@username", username);
+                datos.AgregarParametro("@email", email);
+                datos.AgregarParametro("@id", id);
+
+                datos.EjecutarLectura();
+
+                datos.CerrarConexion();
+
+                datos = new AccesoDatosDB();
+
+                datos.SetearConsulta("SELECT id, nombre, apellido, username, password, email FROM Jugador WHERE id = @id");
+                datos.AgregarParametro("@id", id);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    return new Jugador
+                    {
+                        Id = (int)datos.Lector["id"],
+                        Nombre = datos.Lector["nombre"].ToString(),
+                        Apellido = datos.Lector["apellido"].ToString(),
+                        Username = datos.Lector["username"].ToString(),
+                        Password = datos.Lector["password"].ToString(),
+                        Email = datos.Lector["email"].ToString(),
+                    };
+                }
+
+                datos.CerrarConexion();
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al iniciar sesion: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine($"{ex}");
+                return null;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
         public List<Jugador> listarJugadores()
         {
             List<Jugador> jugadores = new List<Jugador>();

@@ -103,15 +103,17 @@
                             <div class="card-body">
                                 <h5 class="card-title">Liga: <%# Eval("NombreLiga") %></h5>
                                 <div class="d-flex align-items-center justify-content-between" style="width: 100%;">
-                                    <span><%# Eval("Jugador1Nombre") %></span>
-                                    <span><%# Eval("PuntosJugador1") %></span>
+                                    <span style='<%# Convert.ToInt32(Eval("Jugador1Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'>Jugador 1: <%# Eval("Jugador1Nombre") %></span>
+                                    <span style='<%# Convert.ToInt32(Eval("Jugador1Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'> <%# Eval("PuntosJugador1") %></span>
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between" style="width: 100%;">
-                                    <span><%# Eval("Jugador2Nombre") %></span>
-                                    <span><%# Eval("PuntosJugador2") %></span>
+                                    <span style='<%# Convert.ToInt32(Eval("Jugador2Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'>Jugador 2: <%# Eval("Jugador2Nombre") %></span>
+                                    <span style='<%# Convert.ToInt32(Eval("Jugador2Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'><%# Eval("PuntosJugador2") %></span>
                                 </div>
-                                <button type="button" class="btn btn-secondary" onclick="setPartidoIdAndOpenEditModal('<%# Eval("Id") %>', '<%# Eval("Jugador1Id") %>', '<%# Eval("Jugador2Id") %>', '<%# Eval("Jugador1Nombre") %>', '<%# Eval("Jugador2Nombre") %>', '<%# Eval("GanadorId") %>')">Editar</button>
-                                <asp:Button ID="btnDeleteLiga" runat="server" Text="Eliminar" CssClass="btn btn-danger" OnClientClick="setPartidoIdAndOpenModal(this, 'delete'); return false;" data-ligaid='<%# Eval("Id") %>' />
+                                <div class="d-flex justify-content-end mt-3 gap-2">
+                                    <button type="button" class="btn btn-secondary" onclick="setPartidoIdAndOpenEditModal('<%# Eval("Id") %>', '<%# Eval("Jugador1Id") %>', '<%# Eval("Jugador2Id") %>', '<%# Eval("Jugador1Nombre") %>', '<%# Eval("Jugador2Nombre") %>', '<%# Eval("GanadorId") %>')">Editar</button>
+                                    <asp:Button ID="Button3" runat="server" Text="Eliminar" CssClass="btn btn-danger" OnClientClick="setPartidoIdAndOpenModal(this, 'delete'); return false;" data-ligaid='<%# Eval("Id") %>' />
+                                </div>
                             </div>
                         </div>
                     </div>

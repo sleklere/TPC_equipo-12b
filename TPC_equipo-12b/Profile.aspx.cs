@@ -30,8 +30,73 @@ namespace TPC_equipo_12b
             }
         }
 
-        public void btnEditar_Click(object sender, EventArgs e)
+        public void btnEditarTraerDatos_Click(object sender, EventArgs e)
         {
+            Jugador jugador = (Jugador)Session["Jugador"];
+
+            txtNombre.Text = jugador.Nombre;
+            txtApellido.Text = jugador.Apellido;
+            txtUsername.Text = jugador.Username;
+            txtEmail.Text = jugador.Email;
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "OpenModal", "openUpdateModal();", true);
+        }
+
+        public void btnUpdatePerfil_Click(object sender, EventArgs e)
+        {
+            Jugador jugador = (Jugador)Session["Jugador"];
+
+            if (
+                string.IsNullOrEmpty(txtNombre.Text) ||
+                string.IsNullOrEmpty(txtApellido.Text) ||
+                string.IsNullOrEmpty(txtUsername.Text) ||
+                string.IsNullOrEmpty(txtEmail.Text)
+            )
+            {
+                hiddenMessage.Value = "Todos los campos son obligatorios.";
+                hiddenMessageType.Value = "error";
+                return;
+            }
+
+            if (
+                txtNombre.Text == jugador.Nombre &&
+                txtApellido.Text == jugador.Apellido && 
+                txtUsername.Text == jugador.Username && 
+                txtEmail.Text == jugador.Email
+            )
+            {
+                hiddenMessage.Value = "Tenes que cambiar por lo menos un campo.";
+                hiddenMessageType.Value = "error";
+                return;
+            }
+
+            int id = jugador.Id;
+            string nombre = txtNombre.Text;
+            string apellido = txtApellido.Text;
+            string username = txtUsername.Text; 
+            string email = txtEmail.Text;
+
+            string emailFormato = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            if (!System.Text.RegularExpressions.Regex.IsMatch(email, emailFormato))
+            {
+                hiddenMessage.Value = "El email ingresado no tiene un formato válido.";
+                return;
+            }
+
+            JugadorNegocio negocio = new JugadorNegocio();
+            Jugador updateJugador= negocio.UpdateJugador(id, nombre, apellido, username, email);
+
+            if (updateJugador != null)
+            {
+                Session["Jugador"] = updateJugador;
+                hiddenMessage.Value = "Perfil editado correctamente.";
+                hiddenMessageType.Value = "success";
+            }
+            else
+            {
+                hiddenMessage.Value = "Error en la edición.";
+                hiddenMessageType.Value = "error";
+            }
 
         }
 
@@ -40,5 +105,6 @@ namespace TPC_equipo_12b
             Session.Abandon(); 
             Response.Redirect("~/"); 
         }
+
     }
 }
