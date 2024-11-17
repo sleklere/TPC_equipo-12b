@@ -9,6 +9,35 @@
         <asp:Button ID="btnAbrirModal" runat="server" Text="Crear Partido" CssClass="btn btn-primary" OnClientClick="openCreateModal(); return false;" />
     </div>
 
+    <%--LISTAR TODOS LOS PARTIDOS--%>
+    <div class="mx-3">
+        <div class="row row-cols-1 row-cols-md-3 g-2">
+            <asp:Repeater ID="rptPartidos" runat="server">
+                <ItemTemplate>
+                    <div class="col"> 
+                        <div class="card" style="width: 100%;">
+                            <div class="card-body">
+                                <h5 class="card-title">Liga: <%# Eval("NombreLiga") %></h5>
+                                <div class="d-flex align-items-center justify-content-between" style="width: 100%;">
+                                    <span style='<%# Convert.ToInt32(Eval("Jugador1Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'>Jugador 1: <%# Eval("Jugador1Nombre") %></span>
+                                    <span style='<%# Convert.ToInt32(Eval("Jugador1Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'> <%# Eval("PuntosJugador1") %></span>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between" style="width: 100%;">
+                                    <span style='<%# Convert.ToInt32(Eval("Jugador2Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'>Jugador 2: <%# Eval("Jugador2Nombre") %></span>
+                                    <span style='<%# Convert.ToInt32(Eval("Jugador2Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'><%# Eval("PuntosJugador2") %></span>
+                                </div>
+                                <div class="d-flex justify-content-end mt-3 gap-2">
+                                    <button type="button" class="btn btn-secondary" onclick="setPartidoIdAndOpenEditModal('<%# Eval("Id") %>', '<%# Eval("Jugador1Id") %>', '<%# Eval("Jugador2Id") %>', '<%# Eval("Jugador1Nombre") %>', '<%# Eval("Jugador2Nombre") %>', '<%# Eval("PuntosJugador1") %>', '<%# Eval("PuntosJugador2") %>','<%# Eval("GanadorId") %>')">Editar</button>
+                                    <asp:Button ID="Button3" runat="server" Text="Eliminar" CssClass="btn btn-danger" OnClientClick="setPartidoIdAndOpenModal(this, 'delete'); return false;" data-ligaid='<%# Eval("Id") %>' />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+        </div>
+    </div>
+
     <%--MODAL CREAR PARTIDO--%>
     <div class="modal fade" id="creatModal" tabindex="-1" aria-labelledby="modalFormularioPartidoLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -93,35 +122,6 @@
         </div>
     </div>
 
-    <%--LISTAR TODOS LOS PARTIDOS--%>
-    <div class="mx-3">
-        <div class="row row-cols-1 row-cols-md-3 g-2">
-            <asp:Repeater ID="rptPartidos" runat="server">
-                <ItemTemplate>
-                    <div class="col"> 
-                        <div class="card" style="width: 100%;">
-                            <div class="card-body">
-                                <h5 class="card-title">Liga: <%# Eval("NombreLiga") %></h5>
-                                <div class="d-flex align-items-center justify-content-between" style="width: 100%;">
-                                    <span style='<%# Convert.ToInt32(Eval("Jugador1Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'>Jugador 1: <%# Eval("Jugador1Nombre") %></span>
-                                    <span style='<%# Convert.ToInt32(Eval("Jugador1Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'> <%# Eval("PuntosJugador1") %></span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between" style="width: 100%;">
-                                    <span style='<%# Convert.ToInt32(Eval("Jugador2Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'>Jugador 2: <%# Eval("Jugador2Nombre") %></span>
-                                    <span style='<%# Convert.ToInt32(Eval("Jugador2Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'><%# Eval("PuntosJugador2") %></span>
-                                </div>
-                                <div class="d-flex justify-content-end mt-3 gap-2">
-                                    <button type="button" class="btn btn-secondary" onclick="setPartidoIdAndOpenEditModal('<%# Eval("Id") %>', '<%# Eval("Jugador1Id") %>', '<%# Eval("Jugador2Id") %>', '<%# Eval("Jugador1Nombre") %>', '<%# Eval("Jugador2Nombre") %>', '<%# Eval("GanadorId") %>')">Editar</button>
-                                    <asp:Button ID="Button3" runat="server" Text="Eliminar" CssClass="btn btn-danger" OnClientClick="setPartidoIdAndOpenModal(this, 'delete'); return false;" data-ligaid='<%# Eval("Id") %>' />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </ItemTemplate>
-            </asp:Repeater>
-        </div>
-    </div>
-
     <%--MODAL BORRAR PARTIDO--%>
     <div id="deleteModal" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -190,15 +190,17 @@
             }
         }
 
-        function setPartidoIdAndOpenEditModal(id, J1Id, J2Id, puntosJugador1, puntosJugador2, ganadorId) {
-            //var ligaId = button.getAttribute("data-ligaid");
+        function setPartidoIdAndOpenEditModal(id, J1Id, J2Id, nombreJugador1, nombreJugador2, puntosJugador1, puntosJugador2, ganadorId) {
             document.getElementById('<%= hiddenPartidoId.ClientID %>').value = id;
             document.getElementById('<%= hiddenUpdateJ1Id.ClientID %>').value = J1Id;
             document.getElementById('<%= hiddenUpdateJ2Id.ClientID %>').value = J2Id;
             document.getElementById('<%= hiddenUpdateGanadorId.ClientID %>').value = ganadorId;
 
-            document.getElementById('nombreJugador1Update').textContent = puntosJugador1;
-            document.getElementById('nombreJugador2Update').textContent = puntosJugador2;
+            document.getElementById('nombreJugador1Update').textContent = nombreJugador1;
+            document.getElementById('nombreJugador2Update').textContent = nombreJugador2;
+
+            document.getElementById('<%= txtEditPuntosJugador1.ClientID %>').value = puntosJugador1;
+            document.getElementById('<%= txtEditPuntosJugador2.ClientID %>').value = puntosJugador2;
 
             openUpdateModal();
         }

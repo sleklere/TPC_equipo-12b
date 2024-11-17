@@ -175,10 +175,6 @@ namespace TPC_equipo_12b
             int puntosJugador1 = int.Parse(txtEditPuntosJugador1.Text);
             int puntosJugador2 = int.Parse(txtEditPuntosJugador2.Text);
 
-            //System.Diagnostics.Debug.WriteLine($"{jugador1Id} , {jugador2Id}");
-            //System.Diagnostics.Debug.WriteLine($"{ganadorId}");
-            //System.Diagnostics.Debug.WriteLine($"{puntosJugador1} , {puntosJugador2}");
-
             PartidoNegocio partidoNegocio = new PartidoNegocio();
             bool updatePartido;
             updatePartido = partidoNegocio.ActualizarPartido(selectedPartidoId, jugador1Id, puntosJugador1, jugador2Id, puntosJugador2, ganadorId);
@@ -217,11 +213,11 @@ namespace TPC_equipo_12b
                         hiddenMessage.Value = "Partido eliminada correctamente.";
                         hiddenMessageType.Value = "success";
                     }
-                    //else
-                    //{
-                    //    hiddenMessage.Value = "Error en la eliminación";
-                    //    hiddenMessageType.Value = "error";
-                    //}
+                    else
+                    {
+                        hiddenMessage.Value = "Error en la eliminación";
+                        hiddenMessageType.Value = "error";
+                    }
 
                 }
             }
