@@ -71,6 +71,7 @@
     <Content Include="LigaDetalle.aspx" />
     <Content Include="Ligas.aspx" />
     <Content Include="Login.aspx" />
+    <Content Include="Partidos.aspx" />
     <Content Include="Profile.aspx" />
     <Content Include="Register.aspx" />
     <Content Include="Versus.aspx" />
@@ -121,6 +122,13 @@
     </Compile>
     <Compile Include="Master.Master.designer.cs">
       <DependentUpon>Master.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Partidos.aspx.cs">
+      <DependentUpon>Partidos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Partidos.aspx.designer.cs">
+      <DependentUpon>Partidos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Profile.aspx.cs">
       <DependentUpon>Profile.aspx</DependentUpon>

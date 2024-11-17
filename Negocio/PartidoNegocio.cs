@@ -43,42 +43,51 @@ namespace Negocio
                     Console.WriteLine("Error al crear el partido: " + ex.Message);
                     return false;
                 }
+                finally
+                {
+                    datos.CerrarConexion();
+                }
             }
         }
 
-        public List<Partido> listarPartidos()
+        public List<ListarPartidosDTO> listarPartidos()
         {
-            List<Partido> partidos = new List<Partido>();
+            List<ListarPartidosDTO> partidos = new List<ListarPartidosDTO>();
             AccesoDatosDB datos = new AccesoDatosDB();
             {
                 try
                 {
                     datos.SetearConsulta(@"
-                SELECT P.id,
-                       J1.username AS Jugador1Nombre, PJ1.puntos AS PuntosJugador1,
-                       J2.username AS Jugador2Nombre, PJ2.puntos AS PuntosJugador2,
-                       P.ganador_id AS GanadorId,
-                       (SELECT J.username FROM JUGADOR J WHERE J.id = P.ganador_id) AS GanadorNombre
-                FROM PARTIDO P
-                JOIN PARTIDO_JUGADOR PJ1 ON P.id = PJ1.partido_id
-                JOIN JUGADOR J1 ON PJ1.jugador_id = J1.id
-                LEFT JOIN PARTIDO_JUGADOR PJ2 ON P.id = PJ2.partido_id AND PJ2.jugador_id <> PJ1.jugador_id
-                LEFT JOIN JUGADOR J2 ON PJ2.jugador_id = J2.id
-                WHERE PJ1.jugador_id < PJ2.jugador_id OR PJ2.jugador_id IS NULL
-            ");
+                        SELECT P.id,
+                               J1.username AS Jugador1Nombre, J1.id as Jugador1Id, PJ1.puntos AS PuntosJugador1,
+                               J2.username AS Jugador2Nombre, J2.id as Jugador2Id, PJ2.puntos AS PuntosJugador2,
+                               P.ganador_id AS GanadorId,
+                               (SELECT J.username FROM JUGADOR J WHERE J.id = P.ganador_id) AS GanadorNombre,
+                               L.nombre as LigaNombre
+                        FROM PARTIDO P
+                        JOIN PARTIDO_JUGADOR PJ1 ON P.id = PJ1.partido_id
+                        JOIN JUGADOR J1 ON PJ1.jugador_id = J1.id
+                        LEFT JOIN PARTIDO_JUGADOR PJ2 ON P.id = PJ2.partido_id AND PJ2.jugador_id <> PJ1.jugador_id
+                        LEFT JOIN JUGADOR J2 ON PJ2.jugador_id = J2.id
+                        JOIN LIGA L ON P.liga_id = L.id
+                        WHERE PJ1.jugador_id < PJ2.jugador_id OR PJ2.jugador_id IS NULL
+                    ");
                     datos.EjecutarLectura();
 
                     while (datos.Lector.Read())
                     {
-                        Partido partido = new Partido
+                        ListarPartidosDTO partido = new ListarPartidosDTO
                         {
                             Id = (int)datos.Lector["Id"],
+                            Jugador1Id = (int)datos.Lector["Jugador1Id"],
                             Jugador1Nombre = (string)datos.Lector["Jugador1Nombre"],
                             PuntosJugador1 = (int)datos.Lector["PuntosJugador1"],
+                            Jugador2Id = (int)datos.Lector["Jugador2Id"],
                             Jugador2Nombre = (string)datos.Lector["Jugador2Nombre"],
                             PuntosJugador2 = (int)datos.Lector["PuntosJugador2"],
                             GanadorId = (int)datos.Lector["GanadorId"],
-                            GanadorNombre = (string)datos.Lector["GanadorNombre"]
+                            GanadorNombre = (string)datos.Lector["GanadorNombre"],
+                            NombreLiga = (string)datos.Lector["LigaNombre"]
                         };
                         partidos.Add(partido);
                     }
@@ -149,33 +158,50 @@ namespace Negocio
             }
         }
 
-        public void ActualizarPartido(int partidoId, int ligaId, int jugador1Id, int jugador2Id, string resultado)
+        public bool ActualizarPartido(int partidoId, int Jugador1Id, int puntosJugador1, int Jugador2Id, int puntosJugador2, int ganadorId)
         {
             AccesoDatosDB datos = new AccesoDatosDB();
             try
             {
-                datos.SetearConsulta("UPDATE PARTIDO SET LigaId = @LigaId, Resultado = @Resultado WHERE Id = @Id");
-                datos.AgregarParametro("@Id", partidoId);
-                datos.AgregarParametro("@LigaId", ligaId);
-                datos.AgregarParametro("@Resultado", resultado);
-                datos.EjecutarAccion();
+                System.Diagnostics.Debug.WriteLine($"{partidoId}");
+                System.Diagnostics.Debug.WriteLine($"{Jugador1Id} , {Jugador2Id}");
+                System.Diagnostics.Debug.WriteLine($"{ganadorId}");
+                System.Diagnostics.Debug.WriteLine($"{puntosJugador1} , {puntosJugador2}");
 
-                datos.SetearConsulta("DELETE FROM PARTIDO_JUGADOR WHERE PartidoId = @PartidoId");
+                int ganadorIdNuevo = puntosJugador1 > puntosJugador2 ? Jugador1Id : Jugador2Id;
+
+                datos.SetearConsulta(@"
+                UPDATE PARTIDO_JUGADOR 
+                SET puntos = 
+                    CASE 
+                        WHEN jugador_id = @Jugador1Id THEN @PuntosJugador1
+                        WHEN jugador_id = @Jugador2Id THEN @PuntosJugador2
+                    END
+                WHERE partido_id = @PartidoId");
+                datos.AgregarParametro("@Jugador1Id", Jugador1Id);
+                datos.AgregarParametro("@PuntosJugador1", puntosJugador1);
+                datos.AgregarParametro("@Jugador2Id", Jugador2Id);
+                datos.AgregarParametro("@PuntosJugador2", puntosJugador2);
                 datos.AgregarParametro("@PartidoId", partidoId);
                 datos.EjecutarAccion();
 
-                datos.SetearConsulta("INSERT INTO PARTIDO_JUGADOR (PartidoId, JugadorId) VALUES (@PartidoId, @JugadorId)");
-                datos.AgregarParametro("@PartidoId", partidoId);
+                datos.CerrarConexion();
 
-                datos.AgregarParametro("@JugadorId", jugador1Id);
-                datos.EjecutarAccion();
+                if (ganadorIdNuevo != ganadorId)
+                {
+                    datos.SetearConsulta("UPDATE PARTIDO SET ganador_id = @NuevoGanadorId WHERE id = @PartidoId");
+                    datos.AgregarParametro("@NuevoGanadorId", ganadorIdNuevo);
+                    datos.AgregarParametro("@PartidoId", partidoId);
+                    datos.EjecutarAccion();
+                }
 
-                datos.AgregarParametro("@JugadorId", jugador2Id);
-                datos.EjecutarAccion();
+                return true;
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"{ex}");
                 Console.WriteLine("Error al actualizar el partido: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -183,22 +209,26 @@ namespace Negocio
             }
 
         }
-        public void EliminarPartido(int partidoId)
+        public bool EliminarPartido(int partidoId)
         {
             AccesoDatosDB datos = new AccesoDatosDB();
             try
             {
-                datos.SetearConsulta("DELETE FROM PARTIDO_JUGADOR WHERE PartidoId = @PartidoId");
-                datos.AgregarParametro("@PartidoId", partidoId);
+                datos.SetearConsulta("DELETE FROM PARTIDO_JUGADOR WHERE partido_id = @partido_id");
+                datos.AgregarParametro("@partido_id", partidoId);
                 datos.EjecutarAccion();
 
-                datos.SetearConsulta("DELETE FROM PARTIDO WHERE Id = @Id");
-                datos.AgregarParametro("@Id", partidoId);
+                datos.SetearConsulta("DELETE FROM PARTIDO WHERE id = @id");
+                datos.AgregarParametro("@id", partidoId);
                 datos.EjecutarAccion();
+
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error al eliminar el partido: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine($"Error al registrar log en la base de datos: {ex.Message}");
+                return false;
             }
             finally
             {
@@ -292,26 +322,26 @@ namespace Negocio
             try
             {
                 datos.SetearConsulta(@"
-            SELECT TOP 10 
-                p.id AS PartidoId,
-                p.fecha,
-                j1.nombre AS NombreJugador1,
-                j1.apellido AS ApellidoJugador1,
-                pj1.puntos AS PuntosJugador1,
-                j2.nombre AS NombreJugador2,
-                j2.apellido AS ApellidoJugador2,
-                pj2.puntos AS PuntosJugador2,
-                CASE 
-                    WHEN p.ganador_id = @IdJugador THEN 1
-                    ELSE 0 
-                 END AS EsGanador
-            FROM Partido p
-            JOIN Partido_Jugador pj1 ON p.id = pj1.partido_id
-            JOIN Partido_Jugador pj2 ON p.id = pj2.partido_id AND pj1.jugador_id > pj2.jugador_id
-            JOIN Jugador j1 ON pj1.jugador_id = j1.id
-            JOIN Jugador j2 ON pj2.jugador_id = j2.id
-            WHERE pj1.jugador_id = @IdJugador OR pj2.jugador_id = @IdJugador
-            ORDER BY p.fecha DESC");
+                SELECT TOP 10 
+                    p.id AS PartidoId,
+                    p.fecha,
+                    j1.nombre AS NombreJugador1,
+                    j1.apellido AS ApellidoJugador1,
+                    pj1.puntos AS PuntosJugador1,
+                    j2.nombre AS NombreJugador2,
+                    j2.apellido AS ApellidoJugador2,
+                    pj2.puntos AS PuntosJugador2,
+                    CASE 
+                        WHEN p.ganador_id = @IdJugador THEN 1
+                        ELSE 0 
+                     END AS EsGanador
+                FROM Partido p
+                JOIN Partido_Jugador pj1 ON p.id = pj1.partido_id
+                JOIN Partido_Jugador pj2 ON p.id = pj2.partido_id AND pj1.jugador_id > pj2.jugador_id
+                JOIN Jugador j1 ON pj1.jugador_id = j1.id
+                JOIN Jugador j2 ON pj2.jugador_id = j2.id
+                WHERE pj1.jugador_id = @IdJugador OR pj2.jugador_id = @IdJugador
+                ORDER BY p.fecha DESC");
 
                 datos.AgregarParametro("@IdJugador", idJugador);
 

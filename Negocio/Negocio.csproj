@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="JugadorNegocio.cs" />
     <Compile Include="LigaNegocio.cs" />
+    <Compile Include="ListarPartidosDTO.cs" />
     <Compile Include="PartidoDTO.cs" />
     <Compile Include="PartidoNegocio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

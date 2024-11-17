@@ -47,7 +47,10 @@
                             <a class='<%= Request.Url.AbsolutePath.EndsWith("Versus.aspx") ? "nav-link active d-flex align-items-center" : "nav-link d-flex align-items-center" %>' href="Versus.aspx">
                                 <i class="bi bi-people me-2"></i>Jugador VS Jugador
                             </a>
-                            <a runat="server" class='<%= IsActive("~/Perfil.aspx") %> nav-link d-flex align-items-center' href="~/Profile.aspx">
+                            <a class='<%= Request.Url.AbsolutePath.EndsWith("Partidos.aspx") ? "nav-link active d-flex align-items-center" : "nav-link d-flex align-items-center" %>' href="Partidos.aspx">
+                                 <i class="bi bi-trophy me-2"></i>Partidos
+                             </a>
+                             <a class='<%= Request.Url.AbsolutePath.EndsWith("Profile.aspx") ? "nav-link active d-flex align-items-center" : "nav-link d-flex align-items-center" %>' href="Profile.aspx">
                                 <i class="bi bi-person-circle me-2"></i>Perfil
                             </a>
                             <% }
