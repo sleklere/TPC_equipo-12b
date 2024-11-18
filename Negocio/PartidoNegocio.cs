@@ -50,14 +50,15 @@ namespace Negocio
             }
         }
 
-        public List<ListarPartidosDTO> listarPartidos()
+        public List<ListarPartidosDTO> listarPartidos(int? ligaId = null)
         {
             List<ListarPartidosDTO> partidos = new List<ListarPartidosDTO>();
             AccesoDatosDB datos = new AccesoDatosDB();
             {
                 try
                 {
-                    datos.SetearConsulta(@"
+                    System.Diagnostics.Debug.WriteLine($"LigaData.Id: {ligaId}");
+                    string query = @"
                         SELECT P.id,
                                J1.username AS Jugador1Nombre, J1.id as Jugador1Id, PJ1.puntos AS PuntosJugador1,
                                J2.username AS Jugador2Nombre, J2.id as Jugador2Id, PJ2.puntos AS PuntosJugador2,
@@ -70,8 +71,15 @@ namespace Negocio
                         LEFT JOIN PARTIDO_JUGADOR PJ2 ON P.id = PJ2.partido_id AND PJ2.jugador_id <> PJ1.jugador_id
                         LEFT JOIN JUGADOR J2 ON PJ2.jugador_id = J2.id
                         JOIN LIGA L ON P.liga_id = L.id
-                        WHERE PJ1.jugador_id < PJ2.jugador_id OR PJ2.jugador_id IS NULL
-                    ");
+                        WHERE (PJ1.jugador_id < PJ2.jugador_id OR PJ2.jugador_id IS NULL)";
+
+                    if (ligaId != null)
+                    {
+                        query += " AND P.liga_id = @LigaId";
+                        datos.AgregarParametro("@LigaId", ligaId.Value);
+                    }
+
+                    datos.SetearConsulta(query);
                     datos.EjecutarLectura();
 
                     while (datos.Lector.Read())
