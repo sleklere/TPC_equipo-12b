@@ -23,19 +23,17 @@ namespace TPC_equipo_12b
                 if (!IsPostBack)
                 {
                     CargarLigas();
-                    CargarJugadores();
+                    //CargarJugadores();
                     CargarPartidos();
+                } else
+                {
+                    string targetControl = Request.Form["__EVENTTARGET"];
+                    if (targetControl == ddlLiga.UniqueID)
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "OpenModal", "$('#creatModal').modal('show');", true);
+                    }
                 }
             }
-
-            //if (Session["Jugador"] != null)
-            //{
-            //    var jugador = (Jugador)Session["Jugador"];
-            //    System.Diagnostics.Debug.WriteLine("Jugador en inicio:");
-            //    System.Diagnostics.Debug.WriteLine("ID: " + jugador.Id);
-            //    System.Diagnostics.Debug.WriteLine("Nombre: " + jugador.Nombre);
-            //}
-
         }
 
         private void CargarLigas()
@@ -47,10 +45,27 @@ namespace TPC_equipo_12b
             ddlLiga.DataBind();
         }
 
-        private void CargarJugadores()
+        protected void ddlLiga_SelectedIndexChanged(object sender, EventArgs e)
         {
+            string ligaSeleccionada = ddlLiga.SelectedValue;
+
+            if (!string.IsNullOrEmpty(ligaSeleccionada))
+            {
+                int ligaId = int.Parse(ligaSeleccionada);
+                CargarJugadoresPorLiga(ligaId);
+            }
+            else
+            {
+                LimpiarJugadores();
+            }
+        }
+
+        private void CargarJugadoresPorLiga(int ligaId)
+        {
+            // Lógica para cargar jugadores según la liga seleccionada
             JugadorNegocio jugadorNegocio = new JugadorNegocio();
-            List<Jugador> jugadores = jugadorNegocio.listarJugadores();
+            List<Jugador> jugadores = jugadorNegocio.ListarJugadoresByLiga(ligaId);
+
             ddlJugador1.DataSource = jugadores;
             ddlJugador1.DataTextField = "Nombre";
             ddlJugador1.DataValueField = "Id";
@@ -61,6 +76,39 @@ namespace TPC_equipo_12b
             ddlJugador2.DataValueField = "Id";
             ddlJugador2.DataBind();
         }
+
+        private void LimpiarJugadores()
+        {
+            ddlJugador1.Items.Clear();
+            ddlJugador2.Items.Clear();
+        }
+
+        //private void CargarJugadores()
+        //{
+        //    if (!string.IsNullOrEmpty(ddlLiga.SelectedValue))
+        //    {
+        //        int ligaId = int.Parse(ddlLiga.SelectedValue); // Obtiene el Id de la liga seleccionada
+
+        //        JugadorNegocio jugadorNegocio = new JugadorNegocio();
+        //        List<Jugador> jugadores = jugadorNegocio.ListarJugadoresByLiga(ligaId); // Filtra los jugadores por liga
+
+        //        ddlJugador1.DataSource = jugadores;
+        //        ddlJugador1.DataTextField = "Nombre";
+        //        ddlJugador1.DataValueField = "Id";
+        //        ddlJugador1.DataBind();
+
+        //        ddlJugador2.DataSource = jugadores;
+        //        ddlJugador2.DataTextField = "Nombre";
+        //        ddlJugador2.DataValueField = "Id";
+        //        ddlJugador2.DataBind();
+        //    }
+        //    else
+        //    {
+        //        // Manejo de error o mensaje para seleccionar una liga válida
+        //        ddlJugador1.Items.Clear();
+        //        ddlJugador2.Items.Clear();
+        //    }
+        //}
 
         private void CargarPartidos()
         {
@@ -108,7 +156,7 @@ namespace TPC_equipo_12b
             }
             else
             {
-                partidoNegocio.CrearPartido(ligaId, jugadoresConPuntos);
+                //partidoNegocio.CrearPartido(ligaId, jugadoresConPuntos);
                 //hiddenMessage.Value = $"Partido {(isEdit ? "editado" : "creado")} correctamente.";
                 hiddenMessage.Value = $"Partido creado correctamente.";
             }

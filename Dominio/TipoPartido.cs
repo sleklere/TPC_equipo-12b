@@ -11,5 +11,6 @@ namespace Dominio
         public int Id { get; set; }
         public int Sets { get; set; }
         public int Puntos { get; set; }
+        public string TextoDelSelect { get; set; }
     }
 }

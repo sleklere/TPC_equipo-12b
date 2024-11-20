@@ -11,14 +11,15 @@ namespace Negocio
 {
     public class PartidoNegocio
     {
-        public bool CrearPartido(int ligaId, List<(int jugadorId, int puntos)> jugadoresConPuntos)
+        public bool CrearPartido(int ligaId, List<(int jugadorId, int puntos)> jugadoresConPuntos, int tipoPartido)
         {
             AccesoDatosDB datos = new AccesoDatosDB();
             {
                 try
                 {
-                    datos.SetearConsulta("INSERT INTO PARTIDO (liga_id, tipo_partido_id, ganador_id) OUTPUT INSERTED.Id VALUES (@LigaId, 2, @GanadorId)");
+                    datos.SetearConsulta("INSERT INTO PARTIDO (liga_id, tipo_partido_id, ganador_id) OUTPUT INSERTED.Id VALUES (@LigaId, @TipoPartido, @GanadorId)");
                     datos.AgregarParametro("@LigaId", ligaId);
+                    datos.AgregarParametro("@TipoPartido", tipoPartido);
                     int maxPuntos = 0;
                     int ganadorId = jugadoresConPuntos.OrderByDescending(j => j.puntos).First().jugadorId;
                     datos.AgregarParametro("@GanadorId", ganadorId);
@@ -63,6 +64,7 @@ namespace Negocio
                                J1.username AS Jugador1Nombre, J1.id as Jugador1Id, PJ1.puntos AS PuntosJugador1,
                                J2.username AS Jugador2Nombre, J2.id as Jugador2Id, PJ2.puntos AS PuntosJugador2,
                                P.ganador_id AS GanadorId,
+                               P.tipo_partido_id AS TipoPartidoId,
                                (SELECT J.username FROM JUGADOR J WHERE J.id = P.ganador_id) AS GanadorNombre,
                                L.nombre as LigaNombre
                         FROM PARTIDO P
@@ -87,6 +89,7 @@ namespace Negocio
                         ListarPartidosDTO partido = new ListarPartidosDTO
                         {
                             Id = (int)datos.Lector["Id"],
+                            TipoPartidoId = (int)datos.Lector["TipoPartidoId"],
                             Jugador1Id = (int)datos.Lector["Jugador1Id"],
                             Jugador1Nombre = (string)datos.Lector["Jugador1Nombre"],
                             PuntosJugador1 = (int)datos.Lector["PuntosJugador1"],
@@ -113,6 +116,42 @@ namespace Negocio
                 }
             }
         }
+
+        public List<TipoPartido> ListarTiposPartidos()
+        {
+            List<TipoPartido> tipoPartidos = new List<TipoPartido>();
+            AccesoDatosDB datos = new AccesoDatosDB();
+            try
+            {
+                datos.SetearConsulta(@"SELECT * FROM TIPO_PARTIDO");
+
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    TipoPartido tipo = new TipoPartido
+                    {
+                        Id = (int)datos.Lector["id"],
+                        Sets = (int)datos.Lector["sets"],
+                        Puntos = (int)datos.Lector["puntos"],
+                        TextoDelSelect = "A " + (int)datos.Lector["puntos"] + " Puntos",
+                    };
+                    tipoPartidos.Add(tipo);
+                }
+
+                return tipoPartidos;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al listar los partidos: " + ex.Message);
+                return null;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        } 
+
         public List<Partido> listarPartidosEntreJugadores(int jugador1Id, int jugador2Id)
         {
             List<Partido> partidos = new List<Partido>();

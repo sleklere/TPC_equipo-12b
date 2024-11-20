@@ -51,7 +51,7 @@
                         <asp:HiddenField ID="hfPartidoId" runat="server" />
                         <div class="mb-3">
                             <label for="ddlLiga" class="form-label">Liga</label>
-                            <asp:DropDownList ID="ddlLiga" runat="server" CssClass="form-select">
+                            <asp:DropDownList ID="ddlLiga" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlLiga_SelectedIndexChanged">
                             </asp:DropDownList>
                         </div>
 
