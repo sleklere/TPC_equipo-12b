@@ -193,11 +193,16 @@ namespace TPC_equipo_12b
                 int selectedLigaId = Convert.ToInt32(hiddenLigaId.Value);
                 if (selectedLigaId != 0)
                 {
-                    bool deleteLiga;
+                    int deleteLiga;
                     LigaNegocio negocio = new LigaNegocio();
                     deleteLiga = negocio.DeleteLiga(selectedLigaId);
 
-                    if (deleteLiga)
+                    if (deleteLiga == 0)
+                    {
+                        hiddenMessage.Value = "No se puede eliminar ligas que tengan torneos asociados.";
+                        hiddenMessageType.Value = "error";
+                    } 
+                    else if(deleteLiga == 1)
                     {
                         CargarLigas();
                         hiddenMessage.Value = "Liga eliminada correctamente.";

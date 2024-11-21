@@ -303,22 +303,60 @@ namespace Negocio
             }
         }
 
-        public bool DeleteLiga(int idLiga)
+        public int DeleteLiga(int idLiga)
         {
             AccesoDatosDB datos = new AccesoDatosDB();
             Console.WriteLine("Intentando eliminar liga con ID: " + idLiga);
             try
             {
+                // veo si hay tornes asociados a esa liga
+                datos.SetearConsulta(@"SELECT COUNT(*) FROM TORNEO WHERE liga_id = @LigaId");
+                datos.AgregarParametro("@LigaId", idLiga);
+
+                int cantidadLigasAsociadas = datos.EjecutarEscalar();
+                datos.CerrarConexion();
+
+                if(cantidadLigasAsociadas > 0)
+                {
+                    return 0;
+                }
+
+                // elimino a los jugadores de los partidos de esa liga
+                datos = new AccesoDatosDB();
+                datos.SetearConsulta(@"DELETE PJ FROM PARTIDO_JUGADOR PJ
+                                       INNER JOIN PARTIDO P ON PJ.partido_id = P.id
+                                       WHERE P.liga_id = @LigaId");
+                datos.AgregarParametro("@LigaId", idLiga);
+                datos.EjecutarAccion();
+                datos.CerrarConexion();
+
+                // elimino a los partidos
+                datos = new AccesoDatosDB();
+                datos.SetearConsulta(@"DELETE FROM PARTIDO WHERE liga_id = @LigaId");
+                datos.AgregarParametro("@LigaId", idLiga);
+                datos.EjecutarAccion();
+                datos.CerrarConexion();
+
+                // elimino a los jugadores de esa liga
+                datos = new AccesoDatosDB();
+                datos.SetearConsulta(@"DELETE FROM LIGA_JUGADOR WHERE liga_id = @LigaId");
+                datos.AgregarParametro("@LigaId", idLiga);
+                datos.EjecutarAccion();
+                datos.CerrarConexion();
+
+                // elimino la liga
+                datos = new AccesoDatosDB();
                 datos.SetearConsulta("DELETE FROM LIGA WHERE id = @id");
                 datos.AgregarParametro("@id", idLiga);
                 datos.EjecutarAccion();
 
-                return true;
+                return 1;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return false;
+                System.Diagnostics.Debug.WriteLine($"{ex}");
+                return -1;
             }
             finally
             {

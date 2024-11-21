@@ -17,6 +17,7 @@
         No hay ligas disponibles.
     </asp:Label>
 
+    <%--LISTAR LIGAS--%>
     <div class="row row-cols-1 row-cols-md-2 g-4 mx-4">
         <asp:Repeater ID="rptLigas" runat="server">
             <ItemTemplate>
@@ -38,6 +39,7 @@
         </asp:Repeater>
     </div>
 
+    <%--MODAL EDITAR O CREAR LIGA--%>
     <div id="modalPanel" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
 
         <%-- diferenciar entre creacion y edicion --%>
@@ -86,6 +88,7 @@
         </div>
     </div>
 
+    <%--MODAL UNIRSE A LIGA--%>
     <div id="joinModal" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
 
         <%-- diferenciar entre creacion y edicion --%>
@@ -110,12 +113,13 @@
         </div>
     </div>
 
+    <%--MODAL PARA ELIMINAR LIGA--%>
     <div id="deleteModal" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalDeleteLabel">Eliminar Liga</h5>
-                    <button type="button" class="btn-close" aria-label="Close" onclick="closeUpdateModal()"></button>
+                    <button type="button" class="btn-close" aria-label="Close" onclick="closeDeleteModal()"></button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
