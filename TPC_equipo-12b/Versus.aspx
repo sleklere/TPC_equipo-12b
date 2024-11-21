@@ -42,6 +42,10 @@
                         <strong>Racha Actual:</strong>
                         <asp:Label ID="lblRachaJ1" runat="server" ForeColor="Black" />
                     </p>
+                    <p class="mb-1">
+                        <strong>Torneos Ganados:</strong>
+                        <asp:Label ID="lblTorneosJ1" runat="server" ForeColor="Black" />
+                    </p>
                 </div>
             </div>
         </div>
@@ -99,6 +103,10 @@
                     <p class="mb-1">
                         <strong>Racha Actual:</strong>
                         <asp:Label ID="lblRachaJ2" runat="server" ForeColor="Black" />
+                    </p>
+                    <p class="mb-1">
+                        <strong>Torneos Ganados:</strong>
+                        <asp:Label ID="lblTorneosJ2" runat="server" ForeColor="Black" />
                     </p>
                 </div>
             </div>

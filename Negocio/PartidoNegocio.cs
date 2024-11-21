@@ -167,8 +167,8 @@ namespace Negocio
                        P.ganador_id AS GanadorId,
                        P.fecha AS Fecha,
                        (SELECT J.username FROM JUGADOR J WHERE J.id = P.ganador_id) AS GanadorNombre,
-                        L.nombre AS LigaNombre,
-                        T.nombre AS TorneoNombre
+                       L.nombre AS LigaNombre,
+                       T.nombre AS TorneoNombre
                 FROM PARTIDO P
                 JOIN PARTIDO_JUGADOR PJ1 ON P.id = PJ1.partido_id
                 JOIN JUGADOR J1 ON PJ1.jugador_id = J1.id
@@ -337,7 +337,11 @@ namespace Negocio
                              WHERE PJ.jugador_id = J2.id) AS Jugador2TotalPartidos,                        
                             (SELECT COUNT(*) 
                              FROM PARTIDO P 
-                             WHERE P.ganador_id = J2.id) AS Jugador2TotalVictorias
+                             WHERE P.ganador_id = J2.id) AS Jugador2TotalVictorias,
+
+                            (SELECT COUNT(*) FROM TORNEO WHERE ganador_id = J1.id) AS TorneosGanadosJugador1,
+                            (SELECT COUNT(*) FROM TORNEO WHERE ganador_id = J2.id) AS TorneosGanadosJugador2
+
                         FROM PARTIDO P
                         JOIN PARTIDO_JUGADOR PJ1 ON P.id = PJ1.partido_id AND PJ1.jugador_id = @Jugador1Id
                         JOIN PARTIDO_JUGADOR PJ2 ON P.id = PJ2.partido_id AND PJ2.jugador_id = @Jugador2Id
@@ -362,6 +366,7 @@ namespace Negocio
                             Jugador1Derrotas = (int)datos.Lector["Jugador1Derrotas"],
                             Jugador1TotalPartidos = (int)datos.Lector["Jugador1TotalPartidos"],
                             Jugador1TotalVictorias = (int)datos.Lector["Jugador1TotalVictorias"],
+                            TorneosGanadosJugador1 = (int)datos.Lector["TorneosGanadosJugador1"],
 
                             Jugador2Id = (int)datos.Lector["Jugador2Id"],
                             Jugador2Nombre = (string)datos.Lector["Jugador2Nombre"],
@@ -369,6 +374,7 @@ namespace Negocio
                             Jugador2Derrotas = (int)datos.Lector["Jugador2Derrotas"],
                             Jugador2TotalPartidos = (int)datos.Lector["Jugador2TotalPartidos"],
                             Jugador2TotalVictorias = (int)datos.Lector["Jugador2TotalVictorias"],
+                            TorneosGanadosJugador2 = (int)datos.Lector["TorneosGanadosJugador2"]
                         };
                     }
                 }

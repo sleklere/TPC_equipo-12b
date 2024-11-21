@@ -86,6 +86,7 @@ namespace TPC_equipo_12b
                 double pvJ1 = (((double)datosVersus.Jugador1TotalVictorias / (double)datosVersus.Jugador1TotalPartidos) * 100.0);
                 porcentajeVictoriasJ1.Text = $"{pvJ1:F}%";
                 lblRachaJ1.Text = jugadorNegocio.RachaVictorias(jugador1Id).ToString();
+                lblTorneosJ1.Text = datosVersus.TorneosGanadosJugador1.ToString();
 
                 //lblJugador2Nombre.Text = datosVersus.Jugador2Nombre;
                 lblJugador2Victorias.Text = datosVersus.Jugador2Victorias.ToString();
@@ -96,6 +97,7 @@ namespace TPC_equipo_12b
                 double pvJ2 = (((double)datosVersus.Jugador2TotalVictorias / (double)datosVersus.Jugador2TotalPartidos) * 100.0);
                 porcentajeVictoriasJ2.Text = $"{pvJ2:F}%";
                 lblRachaJ2.Text = jugadorNegocio.RachaVictorias(jugador2Id).ToString();
+                lblTorneosJ2.Text = datosVersus.TorneosGanadosJugador2.ToString();
 
 
                 if (datosVersus.Jugador1Victorias == datosVersus.Jugador2Victorias)

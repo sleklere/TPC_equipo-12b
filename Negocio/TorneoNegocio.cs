@@ -486,7 +486,7 @@ namespace Negocio
 
             try
             {
-                datos.SetearConsulta(@"SELECT COUNT (*) FROM PARTIDO WHERE ronda_id = @RondaId AND ganador_id IS NULL OR ganador_id = 0");
+                datos.SetearConsulta(@"SELECT COUNT (*) FROM PARTIDO WHERE ronda_id = @RondaId AND (ganador_id IS NULL OR ganador_id = 0)");
                 datos.AgregarParametro("RondaId", roundId);
 
                 int partidosSinGanador = (int)datos.EjecutarEscalar();
