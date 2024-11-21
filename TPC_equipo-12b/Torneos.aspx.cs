@@ -20,7 +20,8 @@ namespace TPC_equipo_12b
         private void CargarTorneos()
         {
             TorneoNegocio negocio = new TorneoNegocio();
-            ListaTorneos = negocio.ListarTorneos();
+            Jugador jugadorLogueado = (Jugador)Session["Jugador"];
+            ListaTorneos = negocio.ListarTorneos(jugadorLogueado.Id);
 
             if (ListaTorneos != null)
             {

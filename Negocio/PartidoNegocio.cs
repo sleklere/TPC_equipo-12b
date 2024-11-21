@@ -96,8 +96,8 @@ namespace Negocio
                             Jugador2Id = (int)datos.Lector["Jugador2Id"],
                             Jugador2Nombre = (string)datos.Lector["Jugador2Nombre"],
                             PuntosJugador2 = (int)datos.Lector["PuntosJugador2"],
-                            GanadorId = (int)datos.Lector["GanadorId"],
-                            GanadorNombre = (string)datos.Lector["GanadorNombre"],
+                            GanadorId = datos.Lector["GanadorId"] != DBNull.Value ? (int)datos.Lector["GanadorId"] : 0,
+                            GanadorNombre = datos.Lector["GanadorNombre"] != DBNull.Value ? (string)datos.Lector["GanadorNombre"] : "",
                             NombreLiga = (string)datos.Lector["LigaNombre"],
                             Fecha = (DateTime)datos.Lector["Fecha"],
                         };

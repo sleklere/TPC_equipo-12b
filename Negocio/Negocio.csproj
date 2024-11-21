@@ -52,6 +52,7 @@
     <Compile Include="PartidoDTO.cs" />
     <Compile Include="PartidoNegocio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RondaPartidosDTO.cs" />
     <Compile Include="TorneoNegocio.cs" />
     <Compile Include="VersusDTO.cs" />
   </ItemGroup>
