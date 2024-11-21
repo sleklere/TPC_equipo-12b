@@ -51,6 +51,15 @@ namespace TPC_equipo_12b
         protected global::System.Web.UI.WebControls.Label porcentajeVictoriasJ1;
 
         /// <summary>
+        /// lblRachaJ1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRachaJ1;
+
+        /// <summary>
         /// lblJugador1Victorias control.
         /// </summary>
         /// <remarks>
@@ -103,6 +112,15 @@ namespace TPC_equipo_12b
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label porcentajeVictoriasJ2;
+
+        /// <summary>
+        /// lblRachaJ2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRachaJ2;
 
         /// <summary>
         /// rptPartidos control.

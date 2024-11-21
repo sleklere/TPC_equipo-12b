@@ -31,8 +31,10 @@ namespace TPC_equipo_12b
 
         private void CargarJugadores()
         {
+            Jugador jugador = Session["Jugador"] as Jugador;
+
             JugadorNegocio jugadorNegocio = new JugadorNegocio();
-            List<Jugador> jugadores = jugadorNegocio.listarJugadores();
+            List<Jugador> jugadores = jugadorNegocio.listarJugadoresVersus(jugador.Id);
             ddlJugador1.DataSource = jugadores;
             ddlJugador1.DataTextField = "Username";
             ddlJugador1.DataValueField = "Id";
@@ -69,6 +71,7 @@ namespace TPC_equipo_12b
             }
 
             PartidoNegocio partidoNegocio = new PartidoNegocio();
+            JugadorNegocio jugadorNegocio = new JugadorNegocio();
             VersusDTO datosVersus = partidoNegocio.ObtenerVersus(jugador1Id, jugador2Id);
 
             if (datosVersus != null)
@@ -82,6 +85,7 @@ namespace TPC_equipo_12b
                 lblVDHistoricoJ1.Text = totalVictoriasJ1 + "-" + totalDerrotasJ1;
                 double pvJ1 = (((double)datosVersus.Jugador1TotalVictorias / (double)datosVersus.Jugador1TotalPartidos) * 100.0);
                 porcentajeVictoriasJ1.Text = $"{pvJ1:F}%";
+                lblRachaJ1.Text = jugadorNegocio.RachaVictorias(jugador1Id).ToString();
 
                 //lblJugador2Nombre.Text = datosVersus.Jugador2Nombre;
                 lblJugador2Victorias.Text = datosVersus.Jugador2Victorias.ToString();
@@ -91,6 +95,7 @@ namespace TPC_equipo_12b
                 lblVDHistoricoJ2.Text = totalVictoriasJ2 + "-" + totalDerrotasJ2;
                 double pvJ2 = (((double)datosVersus.Jugador2TotalVictorias / (double)datosVersus.Jugador2TotalPartidos) * 100.0);
                 porcentajeVictoriasJ2.Text = $"{pvJ2:F}%";
+                lblRachaJ2.Text = jugadorNegocio.RachaVictorias(jugador2Id).ToString();
 
 
                 if (datosVersus.Jugador1Victorias == datosVersus.Jugador2Victorias)
@@ -133,7 +138,7 @@ namespace TPC_equipo_12b
         protected void CargarPartidosVersus(int jugador1Id, int jugador2Id)
         {
             PartidoNegocio partidoNegocio = new PartidoNegocio();
-            List<Partido> partidos = partidoNegocio.listarPartidosEntreJugadores(jugador1Id, jugador2Id);
+            List<ListarPartidosDTO> partidos = partidoNegocio.listarPartidosEntreJugadores(jugador1Id, jugador2Id);
             if (partidos == null)
             {
                 hiddenMessage.Value = "Error al cargar los partidos.";

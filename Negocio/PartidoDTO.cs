@@ -17,5 +17,6 @@ namespace Negocio
         public string ApellidoJugador2 { get; set; }
         public int PuntosJugador2 { get; set; }
         public bool EsGanador { get; set; }
+        public string NombreLiga { get; set; }
     }
 }

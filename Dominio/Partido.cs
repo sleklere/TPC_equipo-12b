@@ -18,5 +18,6 @@ namespace Dominio
         public int PuntosJugador2 { get; set; }
         public int GanadorId { get; set; }
         public string GanadorNombre { get; set; }
+        public string NombreLiga { get; set; }
     }
 }

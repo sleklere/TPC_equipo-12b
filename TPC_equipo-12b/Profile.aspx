@@ -85,7 +85,7 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
-                            <h5 class="card-title">Partido - <%# Eval("Fecha") %></h5>
+                            <h5 class="card-title">Liga: <%# Eval("NombreLiga") %> - <%# Convert.ToDateTime(Eval("Fecha")).ToString("dd/MM/yyyy") %></h5>
                             <asp:Label runat="server" 
                                 Text='<%# Eval("EsGanador").ToString() == "True" ? "Ganado" : "Perdido" %>' Style='<%# Eval("EsGanador").ToString() == "True" ? "display:flex;align-items:center;padding-left:5px;padding-right:5px;color:white;background-color:green;border-radius:6px;font-weight:600;" : "display:flex;align-items:center;padding-left:5px;padding-right:5px;color:white;background-color:red;border-radius:6px;font-weight:600;" %>'>
                             </asp:Label>

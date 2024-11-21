@@ -48,14 +48,10 @@ namespace Negocio
 
             try
             {
-                // Configurar la consulta para verificar si el email ya existe
                 datos.SetearConsulta("SELECT * FROM JUGADOR WHERE email = @email");
                 datos.AgregarParametro("@email", email);
-
-                // Ejecutar la lectura en lugar de una acción de escritura
                 datos.EjecutarLectura();
 
-                // Verificar si se ha encontrado algún resultado
                 if (datos.Lector != null && datos.Lector.Read())
                 {
                     return true;
@@ -199,27 +195,34 @@ namespace Negocio
             }
         }
 
-        public List<Jugador> listarJugadores()
+        public List<Jugador> listarJugadoresVersus(int jugadorId)
         {
             List<Jugador> jugadores = new List<Jugador>();
             AccesoDatosDB accesoDatos = new AccesoDatosDB();
 
             try
             {
-                accesoDatos.SetearConsulta(@"SELECT id, nombre, apellido, username FROM JUGADOR");
+                accesoDatos.SetearConsulta(@" SELECT DISTINCT J.id, J.nombre, J.apellido, J.username
+                                            FROM JUGADOR J
+                                            INNER JOIN LIGA_JUGADOR LJ ON J.id = LJ.jugador_id
+                                            WHERE LJ.liga_id IN (
+                                                SELECT liga_id
+                                                FROM LIGA_JUGADOR
+                                                WHERE jugador_id = @JugadorId)");
+                accesoDatos.AgregarParametro("@JugadorId", jugadorId);
                 accesoDatos.EjecutarLectura();
 
                 while (accesoDatos.Lector.Read())
                 {
-                    int jugadorId = (int)accesoDatos.Lector["id"];
+                    int jugId = (int)accesoDatos.Lector["id"];
 
-                    Jugador jugador = jugadores.FirstOrDefault(j => j.Id == jugadorId);
+                    Jugador jugador = jugadores.FirstOrDefault(j => j.Id == jugId);
 
                     if (jugador == null)
                     {
                         jugador = new Jugador
                         {
-                            Id = jugadorId,
+                            Id = jugId,
                             Nombre = (string)accesoDatos.Lector["nombre"],
                             Apellido = (string)accesoDatos.Lector["apellido"],
                             Username = (string)accesoDatos.Lector["username"],
@@ -229,6 +232,43 @@ namespace Negocio
                 }
 
                 return jugadores;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                accesoDatos.CerrarConexion();
+            }
+        }
+        public int RachaVictorias(int jugadorId)
+        {
+            AccesoDatosDB accesoDatos = new AccesoDatosDB();
+
+            try
+            {
+                accesoDatos.SetearConsulta(@"
+                    SELECT COUNT(*)
+                    FROM PARTIDO
+                    WHERE ganador_id = @JugadorId
+                      AND fecha > (
+                          SELECT COALESCE(MAX(fecha), '1900-01-01')
+                          FROM PARTIDO P
+                          JOIN PARTIDO_JUGADOR PJ ON P.id = PJ.partido_id
+                          WHERE PJ.jugador_id = @JugadorId
+                          AND P.ganador_id != @JugadorId
+                    )
+                ;");
+                accesoDatos.AgregarParametro("@JugadorId", jugadorId);
+                accesoDatos.EjecutarLectura();
+
+                if (accesoDatos.Lector.Read())
+                {
+                    return (int)accesoDatos.Lector[0];
+                }
+
+                return 0;
             }
             catch (Exception ex)
             {

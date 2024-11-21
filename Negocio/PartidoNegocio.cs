@@ -60,7 +60,7 @@ namespace Negocio
                 {
                     System.Diagnostics.Debug.WriteLine($"LigaData.Id: {ligaId}");
                     string query = @"
-                        SELECT P.id,
+                        SELECT P.id, P.fecha as Fecha,
                                J1.username AS Jugador1Nombre, J1.id as Jugador1Id, PJ1.puntos AS PuntosJugador1,
                                J2.username AS Jugador2Nombre, J2.id as Jugador2Id, PJ2.puntos AS PuntosJugador2,
                                P.ganador_id AS GanadorId,
@@ -77,7 +77,7 @@ namespace Negocio
 
                     if (ligaId != null)
                     {
-                        query += " AND P.liga_id = @LigaId";
+                        query += " AND P.liga_id = @LigaId ORDER BY P.fecha DESC";
                         datos.AgregarParametro("@LigaId", ligaId.Value);
                     }
 
@@ -98,7 +98,8 @@ namespace Negocio
                             PuntosJugador2 = (int)datos.Lector["PuntosJugador2"],
                             GanadorId = (int)datos.Lector["GanadorId"],
                             GanadorNombre = (string)datos.Lector["GanadorNombre"],
-                            NombreLiga = (string)datos.Lector["LigaNombre"]
+                            NombreLiga = (string)datos.Lector["LigaNombre"],
+                            Fecha = (DateTime)datos.Lector["Fecha"],
                         };
                         partidos.Add(partido);
                     }
@@ -152,25 +153,29 @@ namespace Negocio
             }
         } 
 
-        public List<Partido> listarPartidosEntreJugadores(int jugador1Id, int jugador2Id)
+        public List<ListarPartidosDTO> listarPartidosEntreJugadores(int jugador1Id, int jugador2Id)
         {
-            List<Partido> partidos = new List<Partido>();
+            List<ListarPartidosDTO> partidos = new List<ListarPartidosDTO>();
             AccesoDatosDB datos = new AccesoDatosDB();
             {
                 try
                 {
                     datos.SetearConsulta(@"
                 SELECT P.id,
-                       J1.username AS Jugador1Nombre, PJ1.puntos AS PuntosJugador1,
-                       J2.username AS Jugador2Nombre, PJ2.puntos AS PuntosJugador2,
+                       J1.id as Jugador1Id, J1.username AS Jugador1Nombre, PJ1.puntos AS PuntosJugador1,
+                       J2.id as Jugador2Id, J2.username AS Jugador2Nombre, PJ2.puntos AS PuntosJugador2,
                        P.ganador_id AS GanadorId,
-                       (SELECT J.username FROM JUGADOR J WHERE J.id = P.ganador_id) AS GanadorNombre
+                       P.fecha AS Fecha,
+                       (SELECT J.username FROM JUGADOR J WHERE J.id = P.ganador_id) AS GanadorNombre,
+                        L.nombre AS LigaNombre
                 FROM PARTIDO P
                 JOIN PARTIDO_JUGADOR PJ1 ON P.id = PJ1.partido_id
                 JOIN JUGADOR J1 ON PJ1.jugador_id = J1.id
                 LEFT JOIN PARTIDO_JUGADOR PJ2 ON P.id = PJ2.partido_id AND PJ2.jugador_id <> PJ1.jugador_id
                 LEFT JOIN JUGADOR J2 ON PJ2.jugador_id = J2.id
+                JOIN LIGA L ON P.liga_id = L.id
                 WHERE PJ1.jugador_id = @Jugador1Id AND PJ2.jugador_id = @Jugador2Id
+                ORDER BY P.fecha DESC
             ");
                     datos.AgregarParametro("@Jugador1Id", jugador1Id);
                     datos.AgregarParametro("@Jugador2Id", jugador2Id);
@@ -178,15 +183,19 @@ namespace Negocio
 
                     while (datos.Lector.Read())
                     {
-                        Partido partido = new Partido
+                        ListarPartidosDTO partido = new ListarPartidosDTO
                         {
                             Id = (int)datos.Lector["Id"],
+                            Jugador1Id = (int)datos.Lector["Jugador1Id"],
                             Jugador1Nombre = (string)datos.Lector["Jugador1Nombre"],
                             PuntosJugador1 = (int)datos.Lector["PuntosJugador1"],
+                            Jugador2Id = (int)datos.Lector["Jugador2Id"],
                             Jugador2Nombre = (string)datos.Lector["Jugador2Nombre"],
                             PuntosJugador2 = (int)datos.Lector["PuntosJugador2"],
                             GanadorId = (int)datos.Lector["GanadorId"],
-                            GanadorNombre = (string)datos.Lector["GanadorNombre"]
+                            GanadorNombre = (string)datos.Lector["GanadorNombre"],
+                            NombreLiga = (string)datos.Lector["LigaNombre"],
+                            Fecha = (DateTime)datos.Lector["Fecha"],
                         };
                         partidos.Add(partido);
                     }
@@ -382,6 +391,7 @@ namespace Negocio
                 SELECT TOP 10 
                     p.id AS PartidoId,
                     p.fecha,
+                    L.nombre AS LigaNombre,
                     j1.nombre AS NombreJugador1,
                     j1.apellido AS ApellidoJugador1,
                     pj1.puntos AS PuntosJugador1,
@@ -397,6 +407,7 @@ namespace Negocio
                 JOIN Partido_Jugador pj2 ON p.id = pj2.partido_id AND pj1.jugador_id > pj2.jugador_id
                 JOIN Jugador j1 ON pj1.jugador_id = j1.id
                 JOIN Jugador j2 ON pj2.jugador_id = j2.id
+                JOIN LIGA L ON p.liga_id = L.id
                 WHERE pj1.jugador_id = @IdJugador OR pj2.jugador_id = @IdJugador
                 ORDER BY p.fecha DESC");
 
@@ -416,7 +427,8 @@ namespace Negocio
                         NombreJugador2 = datos.Lector["NombreJugador2"].ToString(),
                         ApellidoJugador2 = datos.Lector["ApellidoJugador2"].ToString(),
                         PuntosJugador2 = (int)datos.Lector["PuntosJugador2"],
-                        EsGanador = Convert.ToBoolean(datos.Lector["EsGanador"])
+                        EsGanador = Convert.ToBoolean(datos.Lector["EsGanador"]),
+                        NombreLiga = datos.Lector["LigaNombre"].ToString()
                     };
                     partidos.Add(partido);
                 }

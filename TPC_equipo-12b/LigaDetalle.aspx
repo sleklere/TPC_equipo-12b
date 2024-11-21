@@ -60,7 +60,10 @@
                     <div class="col"> 
                         <div class="card" style="width: 100%;">
                             <div class="card-body">
-                                <h5 class="card-title">Liga: <%# Eval("NombreLiga") %></h5>
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title">Liga: <%# Eval("NombreLiga") %></h5>
+                                    <h5 class="card-title"><%# Convert.ToDateTime(Eval("Fecha")).ToString("dd/MM/yyyy") %></h5>
+                                </div>
                                 <div class="d-flex align-items-center justify-content-between" style="width: 100%;">
                                     <span style='<%# Convert.ToInt32(Eval("Jugador1Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'>Jugador 1: <%# Eval("Jugador1Nombre") %></span>
                                     <span style='<%# Convert.ToInt32(Eval("Jugador1Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'> <%# Eval("PuntosJugador1") %></span>

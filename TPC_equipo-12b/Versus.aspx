@@ -38,7 +38,10 @@
                         <strong>Porcentaje de Victorias:</strong>
                         <asp:Label ID="porcentajeVictoriasJ1" runat="server" ForeColor="Black" />
                     </p>
-                    <p class="mb-1"><strong>Racha Actual:</strong> 5 victorias</p>
+                        <p class="mb-1">
+                            <strong>Racha Actual:</strong>
+                            <asp:Label ID="lblRachaJ1" runat="server" ForeColor="Black" />
+                        </p>
                 </div>
             </div>
         </div>
@@ -93,42 +96,44 @@
                         <strong>Porcentaje de Victorias:</strong>
                         <asp:Label ID="porcentajeVictoriasJ2" runat="server" ForeColor="Black" />
                     </p>
-                    <p class="mb-1"><strong>Racha Actual:</strong> 5 victorias</p>
+                    <p class="mb-1">
+                        <strong>Racha Actual:</strong>
+                        <asp:Label ID="lblRachaJ2" runat="server" ForeColor="Black" />
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <h4 class="" style="margin: 0 24px; padding: 0 24px; font-size: 32px; font-weight: 600;">Partidos</h4>
-    <div class="m-24 p-24" style="margin: 24px; padding: 24px;">
-        <asp:Repeater ID="rptPartidos" runat="server">
-            <ItemTemplate>
-                <div class="d-flex align-items-center justify-content-between py-2 mb-2 border-bottom">
-                    <!-- Liga -->
-                    <span class="text-muted fw-bold" style="width: 20%;">Liga amigos 2024</span>
-                    <!-- Jugador 1 -->
-<%--                    <div class="d-flex align-items-center">
-                        <span class="fw-bold mr-2"><%# Eval("Jugador1Nombre") %></span>
-                    </div>--%>
-                    <%-- Ganador --%>
-                    <div class="d-flex align-items-center">
-                        <span class="badge bg-primary rounded-pill fs-6"><%# Eval("GanadorNombre") %></span>
-                    </div>
-                    <div class="d-flex align-items-center" style="gap: 8px;">
-                        <span class="badge bg-secondary rounded-pill fs-6"><%# Eval("PuntosJugador1") %></span>
-                        <span class="badge bg-secondary rounded-pill fs-6"><%# Eval("PuntosJugador2") %></span>
-                    </div>
-                    <!-- Jugador 2 -->
-<%--                    <div class="d-flex align-items-center">
-                        <span class="fw-bold ml-2"><%# Eval("Jugador2Nombre") %></span>
-                    </div>--%>
-                    <!-- Detalles -->
-                    <a href="#" class="btn btn-outline-primary btn-sm">Detalles</a>
-                </div>
-            </ItemTemplate>
-        </asp:Repeater>
-    </div>
+    <div class="mx-3 my-5">
+         <div class="d-flex justify-content-between align-items-center m-4">
+            <h3>Partidos</h3>
+         </div>
+         <div class="row row-cols-1 row-cols-md-3 g-2">
+             <asp:Repeater ID="rptPartidos" runat="server">
+                 <ItemTemplate>
+                     <div class="col"> 
+                         <div class="card" style="width: 100%;">
+                             <div class="card-body">
+                                 <div class="d-flex justify-content-between">
+                                     <h5 class="card-title">Liga: <%# Eval("NombreLiga") %></h5>
+                                     <h5 class="card-title"><%# Convert.ToDateTime(Eval("Fecha")).ToString("dd/MM/yyyy") %></h5>
+                                 </div>
+                                 <div class="d-flex align-items-center justify-content-between" style="width: 100%;">
+                                     <span style='<%# Convert.ToInt32(Eval("Jugador1Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'>Jugador 1: <%# Eval("Jugador1Nombre") %></span>
+                                     <span style='<%# Convert.ToInt32(Eval("Jugador1Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'> <%# Eval("PuntosJugador1") %></span>
+                                 </div>
+                                 <div class="d-flex align-items-center justify-content-between" style="width: 100%;">
+                                     <span style='<%# Convert.ToInt32(Eval("Jugador2Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'>Jugador 2: <%# Eval("Jugador2Nombre") %></span>
+                                     <span style='<%# Convert.ToInt32(Eval("Jugador2Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;" : "color: red;" %>'><%# Eval("PuntosJugador2") %></span>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </ItemTemplate>
+             </asp:Repeater>
+         </div>
+     </div>
 
     <asp:HiddenField ID="hiddenMessage" runat="server" />
 

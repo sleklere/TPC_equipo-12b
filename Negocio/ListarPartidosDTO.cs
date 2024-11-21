@@ -9,7 +9,7 @@ namespace Negocio
     public class ListarPartidosDTO
     {
         public int Id { get; set; }
-        public string Fecha { get; set; }
+        public DateTime Fecha { get; set; }
         public int TipoPartidoId { get; set; }
         public int Duracion { get; set; }
         public int Jugador1Id{ get; set; }
