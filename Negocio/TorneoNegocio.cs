@@ -123,18 +123,60 @@ namespace Negocio
         public bool DeleteTorneo(int idTorneo)
         {
             AccesoDatosDB datos = new AccesoDatosDB();
+            System.Diagnostics.Debug.WriteLine($"{idTorneo}");
 
             try
             {
-                datos.SetearConsulta("DELETE T FROM TORNEO T WHERE id = @id");
+                // eliminar jugadores de los partidos de las rondas (de la tabla PARTIDO_JUGADOR)
+                datos.SetearConsulta(@"
+                    DELETE PJ
+                    FROM PARTIDO_JUGADOR PJ
+                    INNER JOIN PARTIDO P ON PJ.partido_id = P.id
+                    INNER JOIN RONDA R ON P.ronda_id = R.id
+                    WHERE R.torneo_id = @id");
                 datos.AgregarParametro("@id", idTorneo);
                 datos.EjecutarAccion();
+                datos.CerrarConexion();
+
+                // eliminar partidos asociados a las rondas del torneo
+                datos = new AccesoDatosDB();
+                datos.SetearConsulta(@"
+                    DELETE P 
+                    FROM PARTIDO P
+                    INNER JOIN RONDA R ON P.ronda_id = R.id
+                    WHERE R.torneo_id = @id");
+                datos.AgregarParametro("@id", idTorneo);
+                datos.EjecutarAccion();
+                datos.CerrarConexion();
+
+                // eliminar rondas asociadas a ese torneo
+                datos = new AccesoDatosDB();
+                datos.SetearConsulta("DELETE FROM RONDA WHERE torneo_id = @id");
+                datos.AgregarParametro("@id", idTorneo);
+                datos.EjecutarAccion();
+                datos.CerrarConexion();
+
+                // eliminar jugadores asociados al torneo (tabla TORNEO_JUGADOR)
+                datos = new AccesoDatosDB();
+                datos.SetearConsulta("DELETE FROM TORNEO_JUGADOR WHERE torneo_id = @id");
+                datos.AgregarParametro("@id", idTorneo);
+                datos.EjecutarAccion();
+                datos.CerrarConexion();
+
+                // eliminar torneo
+                datos = new AccesoDatosDB();
+                datos.SetearConsulta("DELETE FROM TORNEO WHERE id = @id");
+                datos.AgregarParametro("@id", idTorneo);
+                datos.EjecutarAccion();
+                datos.CerrarConexion();
+
 
                 return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                System.Diagnostics.Debug.WriteLine($"{ex}");
                 return false;
             }
             finally
