@@ -28,7 +28,8 @@ namespace TPC_equipo_12b
                 rptTorneos.DataSource = ListaTorneos;
                 rptTorneos.DataBind();
                 lblSinTorneos.Visible = false;
-            } else
+            }
+            else
             {
                 rptTorneos.DataSource = null;
                 rptTorneos.DataBind();
@@ -107,6 +108,7 @@ namespace TPC_equipo_12b
 
         protected void btnCrearTorneo_Click(object sender, EventArgs e)
         {
+            divLiga.Visible = true;
             lblModalTitle.Text = "Crear Nuevo Torneo";
             hfTorneoId.Value = string.Empty;
             txtTorneoNombre.Text = string.Empty;
@@ -116,6 +118,7 @@ namespace TPC_equipo_12b
 
         protected void btnEditarTorneo_Command(object sender, CommandEventArgs e)
         {
+            divLiga.Visible = false;
             int torneoId = Convert.ToInt32(e.CommandArgument);
 
             TorneoNegocio negocio = new TorneoNegocio();
@@ -133,6 +136,7 @@ namespace TPC_equipo_12b
 
         protected void btnSaveTorneo_Click(object sender, EventArgs e)
         {
+            bool isEdit = int.TryParse(hfTorneoId.Value, out int torneoId) && torneoId > 0;
             string torneoNombre = txtTorneoNombre.Text;
             var jugadoresSeleccionadosIds = new List<int>();
 
@@ -152,13 +156,16 @@ namespace TPC_equipo_12b
             {
                 mensajeError = "El torneo debe tener un nombre.";
             }
-            else if (jugadoresSeleccionadosIds.Count % 2 != 0)
+            else if (!isEdit)
             {
-                mensajeError = "La cantidad de jugadores debe ser una potencia de 2 (4, 8, 16, etc)";
-            }
-            else if (jugadoresSeleccionadosIds.Count == 0)
-            {
-                mensajeError = "No es posible crear un torneo sin jugadores involucrados.";
+                if (jugadoresSeleccionadosIds.Count % 2 != 0)
+                {
+                    mensajeError = "La cantidad de jugadores debe ser una potencia de 2 (4, 8, 16, etc)";
+                }
+                else if (jugadoresSeleccionadosIds.Count == 0)
+                {
+                    mensajeError = "No es posible crear un torneo sin jugadores involucrados.";
+                }
             }
 
             if (mensajeError != null)
@@ -170,7 +177,6 @@ namespace TPC_equipo_12b
             }
 
             TorneoNegocio negocio = new TorneoNegocio();
-            bool isEdit = int.TryParse(hfTorneoId.Value, out int torneoId) && torneoId > 0;
             Jugador jugadorSesion = (Jugador)Session["Jugador"];
 
             if (isEdit)

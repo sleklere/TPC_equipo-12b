@@ -69,6 +69,15 @@ namespace TPC_equipo_12b
         protected global::System.Web.UI.WebControls.TextBox txtTorneoNombre;
 
         /// <summary>
+        /// divLiga control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divLiga;
+
+        /// <summary>
         /// ddlLiga control.
         /// </summary>
         /// <remarks>

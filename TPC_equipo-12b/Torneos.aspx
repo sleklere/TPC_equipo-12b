@@ -25,7 +25,7 @@
                             <p class="card-text text-muted"><%# ((List<Dominio.Jugador>)Eval("Jugadores")).Count %> jugadores</p>
                             <div class="d-flex gap-2">
                                 <a href='<%# "/TorneoDetalle.aspx?id=" + Eval("Id") %>' class="btn btn-outline-primary">Ver</a>
-                                <asp:Button ID="btnEditarTorneo" runat="server" Text="Editar" CssClass="btn btn-secondary btn-sm"
+                                <asp:Button ID="btnEditarTorneo" runat="server" Text="Editar Nombre" CssClass="btn btn-secondary btn-sm"
                                     CommandName="Editar" CommandArgument='<%# Eval("Id") %>' OnCommand="btnEditarTorneo_Command" />
                                 <asp:Button ID="btnDeleteTorneo" runat="server" Text="Eliminar" CssClass="btn btn-danger" OnClientClick="setTorneoIdAndOpenModal(this, 'delete'); return false;" data-torneoid='<%# Eval("Id") %>' />
                             </div>
@@ -50,7 +50,7 @@
                 </div>
                 <div class="modal-body">
                     <asp:TextBox ID="txtTorneoNombre" runat="server" CssClass="form-control mb-3" placeholder="Nombre del torneo"></asp:TextBox>
-                    <div class="mb-3">
+                    <div id="divLiga" class="mb-3" runat="server" visible="false">
                         <label for="ddlLiga" class="form-label">Liga</label>
                         <asp:DropDownList ID="ddlLiga" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlLiga_SelectedIndexChanged">
                         </asp:DropDownList>

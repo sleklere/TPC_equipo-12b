@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -288,10 +289,31 @@ namespace Negocio
                 rondaNumero = 1;
             }
 
+            string nombreRonda = "";
+
+            switch (jugadoresIds.Count)
+            {
+                case 2:
+                    nombreRonda = "Final";
+                    break;
+                case 4:
+                    nombreRonda = "Semi Final";
+                    break;
+                case 8:
+                    nombreRonda = "Cuartos de Final";
+                    break;
+                case 16:
+                    nombreRonda = "Octavos de Final";
+                    break;
+                default:
+                    nombreRonda = $"Ronda de {jugadoresIds.Count}";
+                    break;
+            }
+
             datos.SetearConsulta("INSERT INTO RONDA (torneo_id, numero, nombre) OUTPUT INSERTED.id VALUES (@torneoId, @numero, @nombre)");
             datos.AgregarParametro("@torneoId", torneoId);
             datos.AgregarParametro("@numero", rondaNumero);
-            datos.AgregarParametro("@nombre", $"Ronda {rondaNumero}");
+            datos.AgregarParametro("@nombre", nombreRonda);
 
             int rondaId = datos.EjecutarEscalar();
 
@@ -464,7 +486,7 @@ namespace Negocio
 
             try
             {
-                datos.SetearConsulta(@"SELECT COUNT (*) FROM PARTIDO WHERE ronda_id = @RondaId AND ganador_id = 0");
+                datos.SetearConsulta(@"SELECT COUNT (*) FROM PARTIDO WHERE ronda_id = @RondaId AND ganador_id IS NULL OR ganador_id = 0");
                 datos.AgregarParametro("RondaId", roundId);
 
                 int partidosSinGanador = (int)datos.EjecutarEscalar();
@@ -482,7 +504,7 @@ namespace Negocio
             }
         }
 
-        public bool AvanzarRonda(int torneoId, int previousRoundId)
+        public int AvanzarRonda(int torneoId, int previousRoundId)
         {
             AccesoDatosDB datos = new AccesoDatosDB();
             List<int> ganadoresIds = new List<int>();
@@ -513,21 +535,53 @@ namespace Negocio
                     ganadoresIds.Add(ganadorId);
                 }
 
+                // chequear si finalizo el torneo
+                if (ganadoresIds.Count == 1)
+                {
+                    FinalizarTorneo(torneoId, ganadoresIds.First());
+                    return 2;
+                }
+
                 datos.CerrarConexion();
 
                 GenerarPartidos(torneoId, ganadoresIds, numeroRondaPrevia + 1);
+
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al listar partidos: " + ex.Message);
+                return 0;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        private bool FinalizarTorneo(int torneoId, int ganadorId)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
+
+            try
+            {
+                datos.SetearConsulta("UPDATE TORNEO SET ganador_id = @ganadorId WHERE id = @torneoId");
+                datos.AgregarParametro("torneoId", torneoId);
+                datos.AgregarParametro("ganadorId", ganadorId);
+                datos.EjecutarAccion();
 
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error al listar partidos: " + ex.Message);
+                Console.WriteLine("Error al finalizar el torneo: " + ex.Message);
                 return false;
             }
             finally
             {
                 datos.CerrarConexion();
             }
+
         }
 
     }

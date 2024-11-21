@@ -46,20 +46,15 @@ namespace TPC_equipo_12b
                     rptRondas.DataSource = rondasConPartidos;
                     rptRondas.DataBind();
 
-                    //foreach (RondaPartidosDTO ronda in rondasConPartidos)
-                    //{
-                    //    if (ronda.Partidos != null && ronda.Partidos.Count > 0)
-                    //    {
-                    //        rptRondas
-                    //    }
-
-                    //}
+                    if (rondasConPartidos.Any(r => r.Partidos.Count == 1))
+                    {
+                        btnNextRound.Text = "Finalizar torneo";
+                    }
+                    else
+                    {
+                        btnNextRound.Text = "Avanzar de ronda";
+                    }
                 }
-                //else
-                //{
-                //    lblSinDatos.Text = "No hay partidos disponibles para este torneo.";
-                //    lblSinDatos.Visible = true;
-                //}
             }
             catch (Exception ex)
             {
@@ -102,7 +97,7 @@ namespace TPC_equipo_12b
             int jugador1Id = int.Parse(hiddenUpdateJ1Id.Value);
             int jugador2Id = int.Parse(hiddenUpdateJ2Id.Value);
             int ganadorId = int.Parse(hiddenUpdateGanadorId.Value);
-            int tipoPartido= int.Parse(hiddenTipoPartido.Value);
+            int tipoPartido = int.Parse(hiddenTipoPartido.Value);
 
             int puntosJugador1 = int.Parse(txtEditPuntosJugador1.Text);
             int puntosJugador2 = int.Parse(txtEditPuntosJugador2.Text);
@@ -169,14 +164,19 @@ namespace TPC_equipo_12b
 
                 if (rondaActualCompletada)
                 {
-                    bool avanzarRonda = torneoNegocio.AvanzarRonda(TorneoData.Id, rondaId);
-                    if (avanzarRonda)
+                    int avanzarRonda = torneoNegocio.AvanzarRonda(TorneoData.Id, rondaId);
+                    if (avanzarRonda == 1)
                     {
                         hiddenMessage.Value = "Nueva ronda creada.";
                         hiddenMessageType.Value = "success";
                         CargarRondasConPartidos();
                     }
-                    else
+                    else if (avanzarRonda == 2)
+                    {
+                        hiddenMessage.Value = "Torneo finalizado!";
+                        hiddenMessageType.Value = "success";
+                    }
+                    else if (avanzarRonda == 0)
                     {
                         hiddenMessage.Value = "Error al crear nueva ronda";
                         hiddenMessageType.Value = "error";
