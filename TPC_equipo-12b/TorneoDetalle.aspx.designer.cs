@@ -24,6 +24,15 @@ namespace TPC_equipo_12b
         protected global::System.Web.UI.WebControls.Repeater rptRondas;
 
         /// <summary>
+        /// btnNextRound control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnNextRound;
+
+        /// <summary>
         /// panelEditPartido control.
         /// </summary>
         /// <remarks>

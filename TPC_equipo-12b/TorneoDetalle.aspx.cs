@@ -158,5 +158,41 @@ namespace TPC_equipo_12b
             }
         }
 
+        protected void btnNextRound_Click(object sender, EventArgs e)
+        {
+            TorneoNegocio torneoNegocio = new TorneoNegocio();
+
+            try
+            {
+                int rondaId = torneoNegocio.RondaActualId(TorneoData.Id);
+                bool rondaActualCompletada = torneoNegocio.RondaActualCompletada(rondaId);
+
+                if (rondaActualCompletada)
+                {
+                    bool avanzarRonda = torneoNegocio.AvanzarRonda(TorneoData.Id, rondaId);
+                    if (avanzarRonda)
+                    {
+                        hiddenMessage.Value = "Nueva ronda creada.";
+                        hiddenMessageType.Value = "success";
+                        CargarRondasConPartidos();
+                    }
+                    else
+                    {
+                        hiddenMessage.Value = "Error al crear nueva ronda";
+                        hiddenMessageType.Value = "error";
+                    }
+                }
+                else
+                {
+                    hiddenMessage.Value = "Todo los partidos de la ronda actual tienen que estar completos.";
+                    hiddenMessageType.Value = "error";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al cargar las rondas con partidos: " + ex.Message);
+            }
+        }
+
     }
 }

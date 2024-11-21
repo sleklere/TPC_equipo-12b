@@ -79,6 +79,7 @@
             </ItemTemplate>
         </asp:Repeater>
     </div>
+    <asp:Button ID="btnNextRound" runat="server" Text="Avanzar de ronda" CssClass="btn btn-primary" OnClick="btnNextRound_Click" />
 
 
 
@@ -159,13 +160,16 @@
 
         window.onload = function () {
             var message = document.getElementById('<%= hiddenMessage.ClientID %>').value;
+            var messageType = document.getElementById('<%= hiddenMessageType.ClientID %>').value;
+
             if (message) {
-                if (message.includes("correctamente")) {
+                if (messageType === "success") {
                     showSuccessMessage(message);
-                } else {
+                } else if (messageType === "error") {
                     showErrorMessage(message);
                 }
                 document.getElementById('<%= hiddenMessage.ClientID %>').value = '';
+                document.getElementById('<%= hiddenMessageType.ClientID %>').value = '';
             }
         };
     </script>

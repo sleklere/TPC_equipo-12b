@@ -2,6 +2,7 @@
 using Dominio;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -274,7 +275,7 @@ namespace Negocio
         }
 
 
-        public void GenerarPartidos(int torneoId, List<int> jugadoresIds)
+        public void GenerarPartidos(int torneoId, List<int> jugadoresIds, int? rondaNumero = null)
         {
             AccesoDatosDB datos = new AccesoDatosDB();
             List<int> jugadoresIdsMezclados = new List<int>();
@@ -282,10 +283,12 @@ namespace Negocio
             var random = new Random();
             jugadoresIdsMezclados = jugadoresIds.OrderBy(j => random.Next()).ToList();
 
-            int rondaNumero = 1;
+            if(rondaNumero == null)
+            {
+                rondaNumero = 1;
+            }
 
-            datos.SetearConsulta(
-                "INSERT INTO RONDA (torneo_id, numero, nombre) OUTPUT INSERTED.id VALUES (@torneoId, @numero, @nombre)");
+            datos.SetearConsulta("INSERT INTO RONDA (torneo_id, numero, nombre) OUTPUT INSERTED.id VALUES (@torneoId, @numero, @nombre)");
             datos.AgregarParametro("@torneoId", torneoId);
             datos.AgregarParametro("@numero", rondaNumero);
             datos.AgregarParametro("@nombre", $"Ronda {rondaNumero}");
@@ -433,8 +436,99 @@ namespace Negocio
             return partidos;
         }
 
+        public int RondaActualId(int torneoId)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
 
+            try
+            {
+                datos.SetearConsulta(@"SELECT TOP 1 id FROM RONDA WHERE torneo_id = @TorneoId ORDER BY numero DESC");
+                datos.AgregarParametro("@TorneoId", torneoId);
 
+                return datos.EjecutarEscalar();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al listar partidos: " + ex.Message);
+                return -1;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public bool RondaActualCompletada(int roundId)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
+
+            try
+            {
+                datos.SetearConsulta(@"SELECT COUNT (*) FROM PARTIDO WHERE ronda_id = @RondaId AND ganador_id = 0");
+                datos.AgregarParametro("RondaId", roundId);
+
+                int partidosSinGanador = (int)datos.EjecutarEscalar();
+
+                return partidosSinGanador == 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al listar partidos: " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public bool AvanzarRonda(int torneoId, int previousRoundId)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
+            List<int> ganadoresIds = new List<int>();
+            int numeroRondaPrevia = -1;
+
+            try
+            {
+                // encuentro el numero de la ronda previa
+                datos.SetearConsulta("SELECT numero FROM RONDA WHERE id = @PreviousRoundId");
+                datos.AgregarParametro("@PreviousRoundId", previousRoundId);
+                numeroRondaPrevia = datos.EjecutarEscalar();
+                datos.CerrarConexion();
+
+                if (numeroRondaPrevia == -1)
+                {
+                    throw new Exception("no se encontro la ronda previa.");
+                }
+
+                // encuentro los ids de los jugadores q ganaron en la ronda previa
+                datos = new AccesoDatosDB();
+                datos.SetearConsulta(@"SELECT P.ganador_id FROM PARTIDO P WHERE P.ronda_id = @PreviousRoundId AND P.ganador_id IS NOT NULL");
+                datos.AgregarParametro("@PreviousRoundId", previousRoundId);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    int ganadorId = datos.Lector.GetInt32(0);
+                    ganadoresIds.Add(ganadorId);
+                }
+
+                datos.CerrarConexion();
+
+                GenerarPartidos(torneoId, ganadoresIds, numeroRondaPrevia + 1);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al listar partidos: " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
 
     }
 }
