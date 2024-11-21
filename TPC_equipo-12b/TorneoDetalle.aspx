@@ -63,11 +63,12 @@
                                                 <span style='<%# Convert.ToInt32(Eval("Jugador2Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;": "color: black;" %>'><%# Eval("PuntosJugador2") %></span>
                                             </div>
                                             <div class="d-flex justify-content-end mt-3 gap-2">
-                                                <button type="button" class="btn btn-secondary"
-                                                    onclick="setPartidoIdAndOpenEditModal('<%# Eval("PartidoId") %>', '<%# Eval("Jugador1Id") %>', '<%# Eval("Jugador2Id") %>', 
-                                                    '<%# Eval("NombreJugador1") %>', '<%# Eval("NombreJugador2") %>', '<%# Eval("PuntosJugador1") %>', '<%# Eval("PuntosJugador2") %>',
-                                                    '<%# Eval("GanadorId") %>', '<%# Eval("TipoPartidoId") %>')">
-                                                    Editar</button>
+                                                 <button type="button" class="btn btn-secondary"
+                                                 style='<%# Eval("RondaNumero").ToString() == RondaActual.ToString() ? "" : "display: none;" %>'
+                                                 onclick="setPartidoIdAndOpenEditModal('<%# Eval("PartidoId") %>', '<%# Eval("Jugador1Id") %>', '<%# Eval("Jugador2Id") %>', 
+                                                 '<%# Eval("NombreJugador1") %>', '<%# Eval("NombreJugador2") %>', '<%# Eval("PuntosJugador1") %>', '<%# Eval("PuntosJugador2") %>',
+                                                 '<%# Eval("GanadorId") %>', '<%# Eval("TipoPartidoId") %>')">
+                                                 Editar</button>
                                             </div>
                                         </div>
                                     </div>

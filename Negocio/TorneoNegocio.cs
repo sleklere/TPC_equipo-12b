@@ -480,6 +480,28 @@ namespace Negocio
             }
         }
 
+        public int RondaActualNumero(int torneoId)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
+
+            try
+            {
+                datos.SetearConsulta(@"SELECT TOP 1 numero FROM RONDA WHERE torneo_id = @TorneoId ORDER BY numero DESC");
+                datos.AgregarParametro("@TorneoId", torneoId);
+
+                return datos.EjecutarEscalar();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al listar partidos: " + ex.Message);
+                return -1;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
         public bool RondaActualCompletada(int roundId)
         {
             AccesoDatosDB datos = new AccesoDatosDB();
@@ -571,6 +593,30 @@ namespace Negocio
                 datos.EjecutarAccion();
 
                 return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al finalizar el torneo: " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+        }
+
+        public bool isTorneoTerminado(int torneoId)
+        {
+            AccesoDatosDB datos = new AccesoDatosDB();
+
+            try
+            {
+                datos.SetearConsulta("SELECT COUNT(*) FROM TORNEO WHERE id = @TorneoId AND ganador_id IS NOT NULL");
+                datos.AgregarParametro("TorneoId", torneoId);
+                int resultado = datos.EjecutarEscalar();
+
+                return resultado > 0;
             }
             catch (Exception ex)
             {

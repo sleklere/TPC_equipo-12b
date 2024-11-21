@@ -12,6 +12,7 @@ namespace TPC_equipo_12b
     public partial class TorneoDetalle : System.Web.UI.Page
     {
         public Torneo TorneoData;
+        public int RondaActual = 1;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["Jugador"] == null)
@@ -36,6 +37,13 @@ namespace TPC_equipo_12b
         {
             TorneoNegocio torneoNegocio = new TorneoNegocio();
             List<RondaPartidosDTO> rondasConPartidos = null;
+
+            RondaActual = torneoNegocio.RondaActualNumero(TorneoData.Id);
+
+            if(torneoNegocio.isTorneoTerminado(TorneoData.Id))
+            {
+                RondaActual = -1;
+            }
 
             try
             {
@@ -74,12 +82,25 @@ namespace TPC_equipo_12b
 
                 if (rptPartidos != null)
                 {
-                    rptPartidos.DataSource = rondaPartidos.Partidos;
+                    var partidosConRondaNumero = rondaPartidos.Partidos.Select(p => new
+                    {
+                        p.PartidoId,
+                        p.Jugador1Id,
+                        p.Jugador2Id,
+                        p.NombreJugador1,
+                        p.NombreJugador2,
+                        p.PuntosJugador1,
+                        p.PuntosJugador2,
+                        p.GanadorId,
+                        p.TipoPartidoId,
+                        RondaNumero = rondaPartidos.Ronda.Numero
+                    }).ToList();
+
+                    rptPartidos.DataSource = partidosConRondaNumero;
                     rptPartidos.DataBind();
                 }
             }
         }
-
 
         protected void btnUpdatePartido_Click(object sender, EventArgs e)
         {
@@ -175,6 +196,7 @@ namespace TPC_equipo_12b
                     {
                         hiddenMessage.Value = "Torneo finalizado!";
                         hiddenMessageType.Value = "success";
+                        CargarRondasConPartidos();
                     }
                     else if (avanzarRonda == 0)
                     {
