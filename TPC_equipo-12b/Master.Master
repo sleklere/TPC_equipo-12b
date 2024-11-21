@@ -27,7 +27,7 @@
         <div>
             <nav class="navbar navbar-expand-lg navbar-dark">
                 <div class="container-fluid">
-                    <a runat="server" class="navbar-brand" href="~/">Temple Pong</a>
+                    <a runat="server" class="navbar-brand ml-4" href="~/">Temple Pong</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -35,9 +35,9 @@
                         <div class="navbar-nav ms-auto navbar-custom">
                             <% if (Session["Jugador"] != null)
                                 { %>
-                            <a class='<%= Request.Url.AbsolutePath.EndsWith("Default.aspx") ? "nav-link active d-flex align-items-center" : "nav-link d-flex align-items-center" %>' href="Default.aspx">
+<%--                            <a class='<%= Request.Url.AbsolutePath.EndsWith("Default.aspx") ? "nav-link active d-flex align-items-center" : "nav-link d-flex align-items-center" %>' href="Default.aspx">
                                 <i class="bi bi-house-door me-2"></i>Inicio
-                            </a>
+                            </a>--%>
                             <a class='<%= Request.Url.AbsolutePath.EndsWith("Ligas.aspx") ? "nav-link active d-flex align-items-center" : "nav-link d-flex align-items-center" %>' href="Ligas.aspx">
                                 <i class="bi bi-trophy me-2"></i>Ligas
                             </a>
@@ -47,15 +47,15 @@
                             <a class='<%= Request.Url.AbsolutePath.EndsWith("Versus.aspx") ? "nav-link active d-flex align-items-center" : "nav-link d-flex align-items-center" %>' href="Versus.aspx">
                                 <i class="bi bi-people me-2"></i>Jugador VS Jugador
                             </a>
-                           <%-- <a class='<%= Request.Url.AbsolutePath.EndsWith("Partidos.aspx") ? "nav-link active d-flex align-items-center" : "nav-link d-flex align-items-center" %>' href="Partidos.aspx">
+                            <%-- <a class='<%= Request.Url.AbsolutePath.EndsWith("Partidos.aspx") ? "nav-link active d-flex align-items-center" : "nav-link d-flex align-items-center" %>' href="Partidos.aspx">
                                  <i class="bi bi-trophy me-2"></i>Partidos
                              </a>--%>
-                             <a class='<%= Request.Url.AbsolutePath.EndsWith("Profile.aspx") ? "nav-link active d-flex align-items-center" : "nav-link d-flex align-items-center" %>' href="Profile.aspx">
+                            <a class='<%= Request.Url.AbsolutePath.EndsWith("Profile.aspx") ? "nav-link active d-flex align-items-center" : "nav-link d-flex align-items-center" %>' href="Profile.aspx">
                                 <i class="bi bi-person-circle me-2"></i>Perfil
                             </a>
                             <% }
-                            else
-                            { %>
+                                else
+                                { %>
                             <a class='<%= Request.Url.AbsolutePath.EndsWith("Login.aspx") ? "nav-link active d-flex align-items-center" : "nav-link d-flex align-items-center" %>' href="Login.aspx">
                                 <i class="bi bi-person me-2"></i>Iniciar Sesión
                             </a>
@@ -65,6 +65,7 @@
                             <% } %>
                         </div>
                     </div>
+                </div>
             </nav>
             <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
 

@@ -167,13 +167,16 @@ namespace Negocio
                        P.ganador_id AS GanadorId,
                        P.fecha AS Fecha,
                        (SELECT J.username FROM JUGADOR J WHERE J.id = P.ganador_id) AS GanadorNombre,
-                        L.nombre AS LigaNombre
+                        L.nombre AS LigaNombre,
+                        T.nombre AS TorneoNombre
                 FROM PARTIDO P
                 JOIN PARTIDO_JUGADOR PJ1 ON P.id = PJ1.partido_id
                 JOIN JUGADOR J1 ON PJ1.jugador_id = J1.id
                 LEFT JOIN PARTIDO_JUGADOR PJ2 ON P.id = PJ2.partido_id AND PJ2.jugador_id <> PJ1.jugador_id
                 LEFT JOIN JUGADOR J2 ON PJ2.jugador_id = J2.id
-                JOIN LIGA L ON P.liga_id = L.id
+                LEFT JOIN LIGA L ON P.liga_id = L.id
+                LEFT JOIN RONDA R ON P.ronda_id = R.id
+                LEFT JOIN TORNEO T ON R.torneo_id = T.id
                 WHERE PJ1.jugador_id = @Jugador1Id AND PJ2.jugador_id = @Jugador2Id
                 ORDER BY P.fecha DESC
             ");
@@ -192,9 +195,10 @@ namespace Negocio
                             Jugador2Id = (int)datos.Lector["Jugador2Id"],
                             Jugador2Nombre = (string)datos.Lector["Jugador2Nombre"],
                             PuntosJugador2 = (int)datos.Lector["PuntosJugador2"],
-                            GanadorId = (int)datos.Lector["GanadorId"],
-                            GanadorNombre = (string)datos.Lector["GanadorNombre"],
-                            NombreLiga = (string)datos.Lector["LigaNombre"],
+                            GanadorId = datos.Lector["GanadorId"] != DBNull.Value ? (int)datos.Lector["GanadorId"] : 0,
+                            GanadorNombre = datos.Lector["GanadorNombre"] != DBNull.Value ? (string)datos.Lector["GanadorNombre"] : "",
+                            NombreLiga = datos.Lector["LigaNombre"] != DBNull.Value ? (string)datos.Lector["LigaNombre"] : "",
+                            NombreTorneo = datos.Lector["TorneoNombre"] != DBNull.Value ? (string)datos.Lector["TorneoNombre"] : "",
                             Fecha = (DateTime)datos.Lector["Fecha"],
                         };
                         partidos.Add(partido);

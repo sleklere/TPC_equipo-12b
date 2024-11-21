@@ -35,11 +35,13 @@ namespace TPC_equipo_12b
             {
                 rptLigas.DataSource = ListaLigas;
                 rptLigas.DataBind();
+                lblSinLigas.Visible = false;
             }
             else
             {
-                hiddenMessage.Value = "No se encontraron ligas asociadas a este usuario.";
-                hiddenMessageType.Value = "info";
+                rptLigas.DataSource = null;
+                rptLigas.DataBind();
+                lblSinLigas.Visible = true;
             }
         }
 

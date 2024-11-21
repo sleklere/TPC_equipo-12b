@@ -13,6 +13,10 @@
         </div>
     </div>
 
+    <asp:Label ID="lblSinLigas" runat="server" Visible="false" CssClass="m-4">
+        No hay ligas disponibles.
+    </asp:Label>
+
     <div class="row row-cols-1 row-cols-md-2 g-4 mx-4">
         <asp:Repeater ID="rptLigas" runat="server">
             <ItemTemplate>

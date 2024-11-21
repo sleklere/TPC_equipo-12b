@@ -27,7 +27,7 @@
                         <% } %>
                     </div>
                     <div class="card-footer d-flex justify-content-between">
-                        <asp:Button ID="btnEditar" runat="server" Text="Editar Perfil" CssClass="btn btn-warning" OnClick="btnEditarTraerDatos_Click"/>
+                        <asp:Button ID="btnEditar" runat="server" Text="Editar Perfil" CssClass="btn btn-outline-primary" OnClick="btnEditarTraerDatos_Click"/>
                         <asp:Button ID="btnCerrarSesion" runat="server" Text="Cerrar Sesión" CssClass="btn btn-danger" OnClick="btnCerrarSesion_Click" />
                     </div>
                 </div>
@@ -87,7 +87,9 @@
                         <div class="d-flex justify-content-between">
                             <h5 class="card-title">Liga: <%# Eval("NombreLiga") %> - <%# Convert.ToDateTime(Eval("Fecha")).ToString("dd/MM/yyyy") %></h5>
                             <asp:Label runat="server" 
-                                Text='<%# Eval("EsGanador").ToString() == "True" ? "Ganado" : "Perdido" %>' Style='<%# Eval("EsGanador").ToString() == "True" ? "display:flex;align-items:center;padding-left:5px;padding-right:5px;color:white;background-color:green;border-radius:6px;font-weight:600;" : "display:flex;align-items:center;padding-left:5px;padding-right:5px;color:white;background-color:red;border-radius:6px;font-weight:600;" %>'>
+                                Text='<%# Eval("EsGanador").ToString() == "True" ? "Ganado" : "Perdido" %>'
+                                Style='<%# Eval("EsGanador").ToString() == "True" ? "display:flex;align-items:center;padding-left:5px;padding-right:5px;color:white;background-color:#12b886;border-radius:6px;font-weight:600;" 
+                                                                                  : "display:flex;align-items:center;padding-left:5px;padding-right:5px;color:white;background-color:#fa5252;border-radius:6px;font-weight:600;" %>'>
                             </asp:Label>
                         </div>
                         <p class="card-text">

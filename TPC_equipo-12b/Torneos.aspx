@@ -11,6 +11,10 @@
         </div>
     </div>
 
+    <asp:Label ID="lblSinTorneos" runat="server" Visible="false" CssClass="m-4">
+        No hay torneos disponibles.
+    </asp:Label>
+
     <div class="row row-cols-1 row-cols-md-2 g-4 mx-4">
         <asp:Repeater ID="rptTorneos" runat="server">
             <ItemTemplate>
@@ -81,7 +85,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalDeleteLabel">Eliminar Torneo</h5>
-                    <button type="button" class="btn-close" aria-label="Close" onclick="closeUpdateModal()"></button>
+                    <button type="button" class="btn-close" aria-label="Close" onclick="closeDeleteModal()"></button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
