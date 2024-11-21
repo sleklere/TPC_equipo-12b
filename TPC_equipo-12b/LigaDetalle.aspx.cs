@@ -29,18 +29,31 @@ namespace TPC_equipo_12b
 
                 if (!IsPostBack)
                 {
-                    if (Request.QueryString["id"] != null)
-                    {
-                        ListaJugadores = negocio.getJugadoresByLigaId(ligaId);
-                        txtCodigoLiga.Text = LigaData.Codigo;
-                    }
-
+                    //if (Request.QueryString["id"] != null)
+                    //{
+                    //    ListaJugadores = negocio.getJugadoresByLigaId(ligaId);
+                    //    txtCodigoLiga.Text = LigaData.Codigo;
+                    //}
+                    CargarJugadorPorLigaParaListado();
                     CargarPartidos();
-                    CargarJugadoresPorLiga(LigaData.Id);
+                    CargarJugadoresPorLigaParaSelects(LigaData.Id);
                     CargarTiposPartido();
                 }
             }
             
+        }
+
+        private void CargarJugadorPorLigaParaListado()
+        {
+            string ligaId = Request.QueryString["id"].ToString();
+
+            if (Request.QueryString["id"] != null)
+            {
+                ListaJugadores = new List<Jugador>();
+                LigaNegocio negocio = new LigaNegocio();
+                ListaJugadores = negocio.getJugadoresByLigaId(ligaId);
+                txtCodigoLiga.Text = LigaData.Codigo;
+            }
         }
 
         private void CargarPartidos()
@@ -77,9 +90,8 @@ namespace TPC_equipo_12b
             //ddlTipoPartidoEditar.DataBind();
         }
 
-        private void CargarJugadoresPorLiga(int ligaId)
+        private void CargarJugadoresPorLigaParaSelects(int ligaId)
         {
-            // Lógica para cargar jugadores según la liga seleccionada
             JugadorNegocio jugadorNegocio = new JugadorNegocio();
             List<Jugador> jugadores = jugadorNegocio.ListarJugadoresByLiga(ligaId);
 
@@ -176,6 +188,7 @@ namespace TPC_equipo_12b
 
             LimpiarFormulario();
             CargarPartidos();
+            CargarJugadorPorLigaParaListado();
         }
 
         private void LimpiarFormulario()
@@ -256,6 +269,7 @@ namespace TPC_equipo_12b
                 hiddenMessage.Value = "Partido editado correctamente.";
                 hiddenMessageType.Value = "success";
                 CargarPartidos();
+                CargarJugadorPorLigaParaListado();
             }
             else
             {
@@ -282,6 +296,7 @@ namespace TPC_equipo_12b
                     if (deletePartido)
                     {
                         CargarPartidos();
+                        CargarJugadorPorLigaParaListado();
                         hiddenMessage.Value = "Partido eliminada correctamente.";
                         hiddenMessageType.Value = "success";
                     }

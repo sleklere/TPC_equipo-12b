@@ -22,7 +22,7 @@ namespace TPC_equipo_12b
             {
                 if (!IsPostBack)
                 {
-                    CargarLigas();
+                    //CargarLigas();
                     //CargarJugadores();
                     CargarPartidos();
                 } else
@@ -36,14 +36,14 @@ namespace TPC_equipo_12b
             }
         }
 
-        private void CargarLigas()
-        {
-            LigaNegocio ligaNegocio = new LigaNegocio();
-            ddlLiga.DataSource = ligaNegocio.listarLigas();
-            ddlLiga.DataTextField = "Nombre";
-            ddlLiga.DataValueField = "Id";
-            ddlLiga.DataBind();
-        }
+        //private void CargarLigas()
+        //{
+        //    LigaNegocio ligaNegocio = new LigaNegocio();
+        //    ddlLiga.DataSource = ligaNegocio.listarLigas();
+        //    ddlLiga.DataTextField = "Nombre";
+        //    ddlLiga.DataValueField = "Id";
+        //    ddlLiga.DataBind();
+        //}
 
         protected void ddlLiga_SelectedIndexChanged(object sender, EventArgs e)
         {

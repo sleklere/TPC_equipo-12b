@@ -16,6 +16,9 @@ namespace Dominio
         public string Password { get; set; }
         public string Email { get; set; }
         public string FechaCreacion { get; set; }
+        public int PartidosGanados{ get; set; }
+        public int PartidosPerdidos{ get; set; }
+        public int PartidosJugados{ get; set; }
         public List<Liga> Ligas { get; set; } = new List<Liga>();
     }
 }

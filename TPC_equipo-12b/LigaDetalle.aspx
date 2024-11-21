@@ -21,6 +21,9 @@
                         <th scope="col">Nombre</th>
                         <th scope="col">Apellido</th>
                         <th scope="col">Username</th>
+                        <th scope="col">Partidos ganados</th>
+                        <th scope="col">Partidos perdidos</th>
+                        <th scope="col">Partidos jugados</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,6 +37,9 @@
                         <td><%: jugador.Nombre %></td>
                         <td><%: jugador.Apellido %></td>
                         <td><%: jugador.Username %></td>
+                        <td><%: jugador.PartidosGanados %></td>
+                        <td><%: jugador.PartidosPerdidos %></td>
+                        <td><%: jugador.PartidosJugados %></td>
                     </tr>
                     <% } %>
                 </tbody>
@@ -43,9 +49,9 @@
    
 
     <%--LISTAR TODOS LOS PARTIDOS--%>
-    <div class="mx-3 mt-5">
+    <div class="mx-3 my-5">
         <div class="d-flex justify-content-between align-items-center m-4">
-            <h1 class="display-6 text-primary fw-bold text-uppercase pb-2 mb-0">Partidos</h1>
+           <h3>Partidos</h3>
             <asp:Button ID="btnAbrirModal" runat="server" Text="Crear Partido" CssClass="btn btn-primary" OnClientClick="openCreateModal(); return false;" />
         </div>
         <div class="row row-cols-1 row-cols-md-3 g-2">

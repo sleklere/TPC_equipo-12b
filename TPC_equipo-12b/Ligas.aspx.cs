@@ -19,12 +19,27 @@ namespace TPC_equipo_12b
         private void CargarLigas()
         {
             LigaNegocio negocio = new LigaNegocio();
-            ListaLigas = negocio.listarLigas();
+
+            Jugador jugador = Session["Jugador"] as Jugador;
+
+            if (jugador == null)
+            {
+                hiddenMessage.Value = "No se encontró información del usuario en la sesión.";
+                hiddenMessageType.Value = "error";
+                return;
+            }
+
+            ListaLigas = negocio.listarLigas(jugador.Id);
 
             if (ListaLigas != null && ListaLigas.Count > 0)
             {
                 rptLigas.DataSource = ListaLigas;
                 rptLigas.DataBind();
+            }
+            else
+            {
+                hiddenMessage.Value = "No se encontraron ligas asociadas a este usuario.";
+                hiddenMessageType.Value = "info";
             }
         }
 
@@ -160,7 +175,7 @@ namespace TPC_equipo_12b
                     hiddenMessageType.Value = "success";
                     CargarLigas();
                 }
-                ListaLigas = negocio.listarLigas();
+                ListaLigas = negocio.listarLigas(jugadorSesion.Id);
             }
             else
             {

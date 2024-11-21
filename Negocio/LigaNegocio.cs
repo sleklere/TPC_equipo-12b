@@ -13,7 +13,7 @@ namespace Negocio
 {
     public class LigaNegocio
     {
-        public List<Liga> listarLigas()
+        public List<Liga> listarLigas(int jugadorId)
         {
             List<Liga> ligas = new List<Liga>();
             AccesoDatosDB accesoDatos = new AccesoDatosDB();
@@ -24,7 +24,12 @@ namespace Negocio
                         SELECT L.Id AS LigaId, L.Nombre AS LigaNombre, J.id AS JugadorId, J.nombre AS JugadorNombre, J.apellido AS JugadorApellido, J.username AS JugadorUsername, J.email AS JugadorEmail
                         FROM LIGA L
                         LEFT JOIN LIGA_JUGADOR LJ ON L.Id = LJ.liga_id
-                        LEFT JOIN JUGADOR J ON LJ.jugador_id = J.id");
+                        LEFT JOIN JUGADOR J ON LJ.jugador_id = J.id
+                          WHERE LJ.liga_id IN (
+                    SELECT liga_id FROM LIGA_JUGADOR WHERE jugador_id = @JugadorId
+                )
+                ");
+                accesoDatos.AgregarParametro("@JugadorId", jugadorId);
                 accesoDatos.EjecutarLectura();
 
                 while (accesoDatos.Lector.Read())
@@ -46,14 +51,15 @@ namespace Negocio
 
                     if (accesoDatos.Lector["JugadorId"] != DBNull.Value)
                     {
-                        Jugador jugador = new Jugador
-                        {
+                            Jugador jugador = new Jugador
+                            {
                             Id = (int)accesoDatos.Lector["JugadorId"],
-                            Nombre = (string)accesoDatos.Lector["JugadorNombre"],
-                            Apellido = (string)accesoDatos.Lector["JugadorApellido"],
-                            Username = (string)accesoDatos.Lector["JugadorUsername"],
-                            Email = (string)accesoDatos.Lector["JugadorEmail"]
-                        };
+                                Nombre = (string)accesoDatos.Lector["JugadorNombre"],
+                                Apellido = (string)accesoDatos.Lector["JugadorApellido"],
+                                Username = (string)accesoDatos.Lector["JugadorUsername"],
+                                Email = (string)accesoDatos.Lector["JugadorEmail"]
+                            };
+
 
                         liga.Jugadores.Add(jugador);
                     }
@@ -392,10 +398,17 @@ namespace Negocio
 
             try
             {
-                datos.SetearConsulta(@"SELECT J.id, J.nombre, J.apellido, J.username, J.email
+                datos.SetearConsulta(@"SELECT J.id, J.nombre, J.apellido, J.username, J.email,
+                                        SUM(CASE WHEN P.ganador_id = J.id THEN 1 ELSE 0 END) AS PartidosGanados,
+                                        SUM(CASE WHEN P.ganador_id != J.id THEN 1 ELSE 0 END) AS PartidosPerdidos
                                         FROM JUGADOR J
                                         INNER JOIN LIGA_JUGADOR LJ ON J.id = LJ.jugador_id
-                                        WHERE LJ.liga_id = @LigaId");
+                                        LEFT JOIN PARTIDO P ON P.liga_id = LJ.liga_id
+                                        WHERE LJ.liga_id = @LigaId
+                                        GROUP BY 
+                                            J.id, J.nombre, J.apellido, J.username, J.email
+                                        ORDER BY 
+                                            SUM(CASE WHEN P.ganador_id = J.id THEN 1 ELSE 0 END) DESC");
                 datos.AgregarParametro("@LigaId", ligaId);
                 datos.EjecutarLectura();
 
@@ -407,7 +420,10 @@ namespace Negocio
                         Nombre = (string)datos.Lector["nombre"],
                         Apellido = (string)datos.Lector["apellido"],
                         Username = (string)datos.Lector["username"],
-                        Email = (string)datos.Lector["email"]
+                        Email = (string)datos.Lector["email"],
+                        PartidosGanados = (int)datos.Lector["PartidosGanados"],
+                        PartidosPerdidos = (int)datos.Lector["PartidosPerdidos"],
+                        PartidosJugados = (int)datos.Lector["PartidosGanados"] + (int)datos.Lector["PartidosPerdidos"],
                     };
 
                     jugadores.Add(aux);

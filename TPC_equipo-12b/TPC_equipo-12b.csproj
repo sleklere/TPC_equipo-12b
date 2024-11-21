@@ -67,6 +67,7 @@
     <Content Include="css\styles.css" />
     <Content Include="AccesoDenegado.aspx" />
     <Content Include="Default.aspx" />
+    <Content Include="Error404.aspx" />
     <Content Include="Global.asax" />
     <Content Include="LigaDetalle.aspx" />
     <Content Include="Ligas.aspx" />
@@ -91,6 +92,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Error404.aspx.cs">
+      <DependentUpon>Error404.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Error404.aspx.designer.cs">
+      <DependentUpon>Error404.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
