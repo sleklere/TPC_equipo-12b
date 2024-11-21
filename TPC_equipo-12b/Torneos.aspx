@@ -21,7 +21,15 @@
                 <div class="col">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title text-uppercase font-weight-bold"><%# Eval("Nombre") %></h5>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5 class="card-title text-uppercase font-weight-bold"><%# Eval("Nombre") %></h5>
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <div class='<%# (int)Eval("GanadorId") > 0 ? "badge bg-success text-white px-3 py-2" : "badge bg-secondary text-white px-3 py-2" %>'>
+                                        <%# (int)Eval("GanadorId") > 0 ? "Finalizado" : "En proceso" %>
+                                    </div>
+                                </div>
+                            </div>
+
                             <p class="card-text text-muted"><%# ((List<Dominio.Jugador>)Eval("Jugadores")).Count %> jugadores</p>
                             <div class="d-flex gap-2">
                                 <a href='<%# "/TorneoDetalle.aspx?id=" + Eval("Id") %>' class="btn btn-outline-primary">Ver</a>

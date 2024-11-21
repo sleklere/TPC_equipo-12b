@@ -21,7 +21,7 @@ namespace Negocio
             try
             {
                 accesoDatos.SetearConsulta(@"
-                        SELECT T.Id AS TorneoId, T.Nombre AS TorneoNombre, J.id AS JugadorId, J.nombre AS JugadorNombre, J.apellido AS JugadorApellido, J.username AS JugadorUsername, J.email AS JugadorEmail
+                        SELECT T.Id AS TorneoId, T.ganador_id AS GanadorId, T.Nombre AS TorneoNombre, J.id AS JugadorId, J.nombre AS JugadorNombre, J.apellido AS JugadorApellido, J.username AS JugadorUsername, J.email AS JugadorEmail
                         FROM TORNEO T
                         JOIN TORNEO_JUGADOR TJ ON T.Id = TJ.torneo_id
                         JOIN JUGADOR J ON TJ.jugador_id = J.id
@@ -46,6 +46,7 @@ namespace Negocio
                         {
                             Id = torneoId,
                             Nombre = (string)accesoDatos.Lector["TorneoNombre"],
+                            GanadorId = accesoDatos.Lector["GanadorId"] != DBNull.Value ? (int)accesoDatos.Lector["GanadorId"] : 0,
                             Jugadores = new List<Jugador>()
                         };
                         torneos.Add(torneo);
@@ -200,7 +201,10 @@ namespace Negocio
             try
             {
                 AccesoDatosDB datos = new AccesoDatosDB();
-                datos.SetearConsulta(@"SELECT Id, Nombre FROM TORNEO T WHERE Id = @id");
+                datos.SetearConsulta(@"SELECT T.id AS Id, T.Nombre AS Nombre, J.username AS GanadorNombre
+                    FROM TORNEO T
+                    LEFT JOIN JUGADOR J ON T.ganador_id = J.id 
+                    WHERE T.id = @id");
                 datos.AgregarParametro("@id", id);
                 datos.EjecutarLectura();
 
@@ -209,7 +213,8 @@ namespace Negocio
                     torneo = new Torneo
                     {
                         Id = (int)datos.Lector["Id"],
-                        Nombre = (string)datos.Lector["Nombre"]
+                        Nombre = (string)datos.Lector["Nombre"],
+                        GanadorNombre = datos.Lector["GanadorNombre"] != DBNull.Value ? (string)datos.Lector["GanadorNombre"] : "",
                     };
                 }
                 datos.CerrarConexion();

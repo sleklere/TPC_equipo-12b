@@ -21,15 +21,30 @@ namespace TPC_equipo_12b
             }
             else
             {
-                TorneoNegocio negocio = new TorneoNegocio();
-                string torneoId = Request.QueryString["id"].ToString();
-
-                TorneoData = negocio.GetTorneoById(int.Parse(torneoId));
+                CargarTorneoData();
 
                 if (!IsPostBack)
                 {
                     CargarRondasConPartidos();
                 }
+            }
+        }
+
+        private void CargarTorneoData()
+        {
+
+            TorneoNegocio negocio = new TorneoNegocio();
+            string torneoId = Request.QueryString["id"].ToString();
+
+            TorneoData = negocio.GetTorneoById(int.Parse(torneoId));
+
+            if (string.IsNullOrEmpty(TorneoData.GanadorNombre))
+            {
+                btnNextRound.Visible = true;
+            }
+            else
+            {
+                btnNextRound.Visible = false;
             }
         }
 
@@ -40,7 +55,7 @@ namespace TPC_equipo_12b
 
             RondaActual = torneoNegocio.RondaActualNumero(TorneoData.Id);
 
-            if(torneoNegocio.isTorneoTerminado(TorneoData.Id))
+            if (torneoNegocio.isTorneoTerminado(TorneoData.Id))
             {
                 RondaActual = -1;
             }
@@ -196,6 +211,7 @@ namespace TPC_equipo_12b
                     {
                         hiddenMessage.Value = "Torneo finalizado!";
                         hiddenMessageType.Value = "success";
+                        CargarTorneoData();
                         CargarRondasConPartidos();
                     }
                     else if (avanzarRonda == 0)

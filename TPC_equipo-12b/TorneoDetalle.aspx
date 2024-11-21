@@ -6,49 +6,44 @@
 
 
     <div class="d-flex justify-content-start gap-4 align-items-center m-4">
-        <h1 class="display-6 text-primary fw-bold text-uppercase pb-2 mb-0"><%= TorneoData.Nombre %></h1>
+        <h1 class="display-6 text-primary fw-bold text-uppercase mb-0"><%= TorneoData.Nombre %></h1>
+        <div class="d-flex justify-content-start align-items-center my-3">
+            <% if (string.IsNullOrEmpty(TorneoData.GanadorNombre))
+                { %>
+            <div class="badge bg-secondary text-white px-3 py-2">
+                En proceso
+            </div>
+            <% }
+                else
+                { %>
+            <div class="badge bg-success text-white px-3 py-2">
+                Finalizado
+            </div>
+            <% } %>
+        </div>
     </div>
 
-    <%--LISTAR TODOS LOS PARTIDOS POR RONDA--%>
-    <%--    <div class="mx-3 my-5">
-        <div class="d-flex justify-content-between align-items-center m-4">
-            <h3>Partidos</h3>
-            <asp:Button ID="btnAbrirModal" runat="server" Text="Crear Partido" CssClass="btn btn-primary" OnClientClick="openCreateModal(); return false;" />
+    <% if (!string.IsNullOrEmpty(TorneoData.GanadorNombre))
+        { %>
+    <div class="card border-success mb-3 mx-auto" style="max-width: 18rem;" id="cardGanador" runat="server">
+        <div class="card-header bg-success text-white d-flex align-items-center justify-content-center">
+            <i class="bi bi-trophy-fill me-2"></i>
+            Ganador del Torneo
         </div>
-        <div class="row row-cols-1 row-cols-md-3 g-2">
-            <asp:Repeater ID="rptPartidos" runat="server">
-                <ItemTemplate>
-                    <div class="col">
-                        <div class="card" style="width: 100%;">
-                            <div class="card-body">
-                                <h5 class="card-title">Liga: <%# Eval("NombreLiga") %></h5>
-                                <div class="d-flex align-items-center justify-content-between" style="width: 100%;">
-                                    <span style='<%# Convert.ToInt32(Eval("Jugador1Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;": "color: red;" %>'>Jugador 1: <%# Eval("Jugador1Nombre") %></span>
-                                    <span style='<%# Convert.ToInt32(Eval("Jugador1Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;": "color: red;" %>'><%# Eval("PuntosJugador1") %></span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between" style="width: 100%;">
-                                    <span style='<%# Convert.ToInt32(Eval("Jugador2Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;": "color: red;" %>'>Jugador 2: <%# Eval("Jugador2Nombre") %></span>
-                                    <span style='<%# Convert.ToInt32(Eval("Jugador2Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;": "color: red;" %>'><%# Eval("PuntosJugador2") %></span>
-                                </div>
-                                <div class="d-flex justify-content-end mt-3 gap-2">
-                                    <button type="button" class="btn btn-secondary" onclick="setPartidoIdAndOpenEditModal('<%# Eval("Id") %>', '<%# Eval("Jugador1Id") %>', '<%# Eval("Jugador2Id") %>', '<%# Eval("Jugador1Nombre") %>', '<%# Eval("Jugador2Nombre") %>', '<%# Eval("PuntosJugador1") %>', '<%# Eval("PuntosJugador2") %>','<%# Eval("GanadorId") %>', '<%# Eval("TipoPartidoId") %>')">Editar</button>
-                                    <asp:Button ID="Button3" runat="server" Text="Eliminar" CssClass="btn btn-danger" OnClientClick="setPartidoIdAndOpenModal(this, 'delete'); return false;" data-ligaid='<%# Eval("Id") %>' />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </ItemTemplate>
-            </asp:Repeater>
+        <div class="card-body text-success">
+            <h5 class="card-title text-center fw-bold">
+                <%= TorneoData.GanadorNombre %>
+            </h5>
         </div>
-    </div>--%>
-
+    </div>
+    <% }%>
 
     <div class="container">
         <asp:Repeater ID="rptRondas" runat="server" OnItemDataBound="rptRondas_ItemDataBound">
             <ItemTemplate>
                 <div class="mb-4">
-                    <h4 class="text-primary">Ronda: <%# Eval("Ronda.Nombre") %></h4>
-                    <div class="row row-cols-1 row-cols-md-3 g-2">
+                    <h4 class="text-primary mb-4" style="text-align: center;">Ronda: <%# Eval("Ronda.Nombre") %></h4>
+                    <div class="row row-cols-1 row-cols-md-3 g-2 justify-content-center">
                         <asp:Repeater ID="rptPartidos" runat="server">
                             <ItemTemplate>
                                 <div class="col">
@@ -63,12 +58,12 @@
                                                 <span style='<%# Convert.ToInt32(Eval("Jugador2Id")) == Convert.ToInt32(Eval("GanadorId")) ? "color: green;": "color: black;" %>'><%# Eval("PuntosJugador2") %></span>
                                             </div>
                                             <div class="d-flex justify-content-end mt-3 gap-2">
-                                                 <button type="button" class="btn btn-secondary"
-                                                 style='<%# Eval("RondaNumero").ToString() == RondaActual.ToString() ? "" : "display: none;" %>'
-                                                 onclick="setPartidoIdAndOpenEditModal('<%# Eval("PartidoId") %>', '<%# Eval("Jugador1Id") %>', '<%# Eval("Jugador2Id") %>', 
+                                                <button type="button" class="btn btn-secondary"
+                                                    style='<%# Eval("RondaNumero").ToString() == RondaActual.ToString() ? "": "display: none;" %>'
+                                                    onclick="setPartidoIdAndOpenEditModal('<%# Eval("PartidoId") %>', '<%# Eval("Jugador1Id") %>', '<%# Eval("Jugador2Id") %>', 
                                                  '<%# Eval("NombreJugador1") %>', '<%# Eval("NombreJugador2") %>', '<%# Eval("PuntosJugador1") %>', '<%# Eval("PuntosJugador2") %>',
                                                  '<%# Eval("GanadorId") %>', '<%# Eval("TipoPartidoId") %>')">
-                                                 Editar</button>
+                                                    <%# Convert.ToInt32(Eval("GanadorId")) > 0 ? "Modificar resultado" : "Completar resultado" %></button>
                                             </div>
                                         </div>
                                     </div>
@@ -80,7 +75,10 @@
             </ItemTemplate>
         </asp:Repeater>
     </div>
-    <asp:Button ID="btnNextRound" runat="server" Text="Avanzar de ronda" CssClass="btn btn-primary" OnClick="btnNextRound_Click" />
+
+    <div class="w-full d-flex justify-content-between align-items-center">
+        <asp:Button ID="btnNextRound" runat="server" Text="Avanzar de ronda" CssClass="btn btn-primary mx-auto" OnClick="btnNextRound_Click" />
+    </div>
 
 
 
@@ -89,7 +87,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalFormularioPartidoLabel">Editar Partido</h5>
+                    <h5 class="modal-title" id="modalFormularioPartidoLabel">Completar datos del partido</h5>
                     <button type="button" class="btn-close" aria-label="Close" onclick="closeUpdateModal()"></button>
                 </div>
                 <div class="modal-body">
