@@ -75,6 +75,7 @@
     <Content Include="Partidos.aspx" />
     <Content Include="Profile.aspx" />
     <Content Include="Register.aspx" />
+    <Content Include="Torneos.aspx" />
     <Content Include="Versus.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -152,6 +153,13 @@
     </Compile>
     <Compile Include="Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Torneos.aspx.cs">
+      <DependentUpon>Torneos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Torneos.aspx.designer.cs">
+      <DependentUpon>Torneos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Versus.aspx.cs">
       <DependentUpon>Versus.aspx</DependentUpon>

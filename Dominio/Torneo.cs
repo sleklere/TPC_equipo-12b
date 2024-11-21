@@ -10,9 +10,9 @@ namespace Dominio
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public string FechaInicio { get; set; }
-        public string FechaFin { get; set; }
-        public string TipoTorneo { get; set; }
-        public string Estado { get; set; }
+        public int LigaId { get; set; }
+        public string FechaCreacion { get; set; }
+        public int GanadorId { get; set; }
+        public List<Jugador> Jugadores { get; set; }
     }
 }

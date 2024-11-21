@@ -77,6 +77,54 @@ namespace Negocio
             }
         }
 
+        public List<Liga> ListarLigasJugador(int jugadorId)
+        {
+            List<Liga> ligas = new List<Liga>();
+            AccesoDatosDB accesoDatos = new AccesoDatosDB();
+
+            try
+            {
+                accesoDatos.SetearConsulta(@"
+                        SELECT L.Id AS LigaId, L.Nombre AS LigaNombre, J.id AS JugadorId, J.nombre AS JugadorNombre, J.apellido AS JugadorApellido, J.username AS JugadorUsername, J.email AS JugadorEmail
+                        FROM LIGA L
+                        LEFT JOIN LIGA_JUGADOR LJ ON L.Id = LJ.liga_id
+                        LEFT JOIN JUGADOR J ON LJ.jugador_id = J.id 
+                        WHERE LJ.jugador_id = @JugadorId");
+                accesoDatos.AgregarParametro("@JugadorId", jugadorId);
+                accesoDatos.EjecutarLectura();
+
+                while (accesoDatos.Lector.Read())
+                {
+                    int ligaId = (int)accesoDatos.Lector["LigaId"];
+
+                    Liga liga = ligas.FirstOrDefault(l => l.Id == ligaId);
+
+                    if (liga == null)
+                    {
+                        liga = new Liga
+                        {
+                            Id = ligaId,
+                            Nombre = (string)accesoDatos.Lector["LigaNombre"],
+                            //Jugadores = new List<Jugador>()
+                        };
+                        ligas.Add(liga);
+                    }
+                }
+
+                return ligas;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                accesoDatos.CerrarConexion();
+            }
+
+
+        }
+
         public List<Liga> listarLigasSinParticipacion(int jugadorId)
         {
             List<Liga> ligas = new List<Liga>();
