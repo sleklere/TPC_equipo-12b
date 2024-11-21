@@ -20,7 +20,7 @@
                             <h5 class="card-title text-uppercase font-weight-bold"><%# Eval("Nombre") %></h5>
                             <p class="card-text text-muted"><%# ((List<Dominio.Jugador>)Eval("Jugadores")).Count %> jugadores</p>
                             <div class="d-flex gap-2">
-                                <a href='<%# "TorneoDetalle.aspx?id=" + Eval("Id") %>' class="btn btn-outline-primary">Ver</a>
+                                <a href='<%# "/TorneoDetalle.aspx?id=" + Eval("Id") %>' class="btn btn-outline-primary">Ver</a>
                                 <asp:Button ID="btnEditarTorneo" runat="server" Text="Editar" CssClass="btn btn-secondary btn-sm"
                                     CommandName="Editar" CommandArgument='<%# Eval("Id") %>' OnCommand="btnEditarTorneo_Command" />
                                 <asp:Button ID="btnDeleteTorneo" runat="server" Text="Eliminar" CssClass="btn btn-danger" OnClientClick="setTorneoIdAndOpenModal(this, 'delete'); return false;" data-torneoid='<%# Eval("Id") %>' />

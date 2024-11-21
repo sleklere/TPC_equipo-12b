@@ -11,7 +11,7 @@ namespace Negocio
 {
     public class TorneoNegocio
     {
-        public List<Torneo> ListarTorneos()
+        public List<Torneo> ListarTorneos(int jugadorLogueadoId)
         {
             List<Torneo> torneos = new List<Torneo>();
             AccesoDatosDB accesoDatos = new AccesoDatosDB();
@@ -21,8 +21,15 @@ namespace Negocio
                 accesoDatos.SetearConsulta(@"
                         SELECT T.Id AS TorneoId, T.Nombre AS TorneoNombre, J.id AS JugadorId, J.nombre AS JugadorNombre, J.apellido AS JugadorApellido, J.username AS JugadorUsername, J.email AS JugadorEmail
                         FROM TORNEO T
-                        LEFT JOIN TORNEO_JUGADOR TJ ON T.Id = TJ.torneo_id
-                        LEFT JOIN JUGADOR J ON TJ.jugador_id = J.id");
+                        JOIN TORNEO_JUGADOR TJ ON T.Id = TJ.torneo_id
+                        JOIN JUGADOR J ON TJ.jugador_id = J.id
+                        WHERE T.id IN (
+                            SELECT DISTINCT T2.id
+                            FROM TORNEO T2
+                            JOIN TORNEO_JUGADOR TJ2 ON T2.id = TJ2.torneo_id
+                            WHERE TJ2.jugador_id = @jugador_id
+                        )");
+                accesoDatos.AgregarParametro("@jugador_id", jugadorLogueadoId);
                 accesoDatos.EjecutarLectura();
 
                 while (accesoDatos.Lector.Read())
@@ -184,6 +191,7 @@ namespace Negocio
                             Username = (string)datos.Lector["username"],
                             Email = (string)datos.Lector["email"]
                         };
+                        torneo.Jugadores = new List<Jugador>();
                         torneo.Jugadores.Add(jugador);
                     }
                     datos.CerrarConexion();
@@ -277,6 +285,113 @@ namespace Negocio
             }
 
         }
+
+        public List<RondaPartidosDTO> ListarRondasConPartidos(int torneoId)
+        {
+            List<RondaPartidosDTO> rondas = new List<RondaPartidosDTO>();
+            AccesoDatosDB datos = new AccesoDatosDB();
+
+            try
+            {
+                datos.SetearConsulta(@"
+                    SELECT id, nombre, numero 
+                    FROM RONDA 
+                    WHERE torneo_id = @TorneoId 
+                    ORDER BY numero");
+                datos.AgregarParametro("@TorneoId", torneoId);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Ronda ronda = new Ronda
+                    (
+                        (int)datos.Lector["id"],
+                        (int)datos.Lector["numero"],
+                        (string)datos.Lector["nombre"]
+                    );
+                    List<PartidoDTO> partidosRonda = ListarPartidosPorRonda((int)datos.Lector["id"]);
+                    RondaPartidosDTO dto = new RondaPartidosDTO
+                    (
+                        ronda,
+                        partidosRonda
+                    );
+                    rondas.Add(dto);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al listar rondas: " + ex.Message);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return rondas;
+        }
+
+        public List<PartidoDTO> ListarPartidosPorRonda(int rondaId)
+        {
+            List<PartidoDTO> partidos = new List<PartidoDTO>();
+            AccesoDatosDB datos = new AccesoDatosDB();
+
+            try
+            {
+                string query = @"
+            SELECT P.id AS PartidoId,
+                   P.fecha AS Fecha,
+                   J1.id AS Jugador1Id,
+                   J2.id AS Jugador2Id,
+                   P.ganador_id AS GanadorId,
+                   J1.username AS NombreJugador1, J1.id as Jugador1Id, PJ1.puntos AS PuntosJugador1,
+                   J2.username AS NombreJugador2, J2.id as Jugador2Id, PJ2.puntos AS PuntosJugador2,
+                   P.ganador_id AS GanadorId,
+                   (SELECT J.username FROM JUGADOR J WHERE J.id = P.ganador_id) AS GanadorNombre,
+                   P.tipo_partido_id AS TipoPartidoId 
+            FROM PARTIDO P
+            JOIN PARTIDO_JUGADOR PJ1 ON P.id = PJ1.partido_id
+            JOIN JUGADOR J1 ON PJ1.jugador_id = J1.id
+            LEFT JOIN PARTIDO_JUGADOR PJ2 ON P.id = PJ2.partido_id AND PJ2.jugador_id <> PJ1.jugador_id
+            LEFT JOIN JUGADOR J2 ON PJ2.jugador_id = J2.id
+            JOIN RONDA R ON P.ronda_id = R.id
+            WHERE P.ronda_id = @RondaId
+            AND (PJ1.jugador_id < PJ2.jugador_id OR PJ2.jugador_id IS NULL)";
+
+                datos.SetearConsulta(query);
+                datos.AgregarParametro("@RondaId", rondaId);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    var partido = new PartidoDTO
+                    {
+                        PartidoId = (int)datos.Lector["PartidoId"],
+                        //Fecha = (DateTime)datos.Lector["Fecha"],
+                        Jugador1Id = (int)datos.Lector["Jugador1Id"],
+                        NombreJugador1 = (string)datos.Lector["NombreJugador1"],
+                        PuntosJugador1 = datos.Lector["PuntosJugador1"] != DBNull.Value ? (int)datos.Lector["PuntosJugador1"] : 0,
+                        Jugador2Id = (int)datos.Lector["Jugador2Id"],
+                        NombreJugador2 = datos.Lector["NombreJugador2"] != DBNull.Value ? (string)datos.Lector["NombreJugador2"] : "",
+                        PuntosJugador2 = datos.Lector["PuntosJugador2"] != DBNull.Value ? (int)datos.Lector["PuntosJugador2"] : 0,
+                        GanadorId = datos.Lector["GanadorId"] != DBNull.Value ? (int)datos.Lector["GanadorId"] : 0,
+                        TipoPartidoId = (int)datos.Lector["TipoPartidoId"],
+                    };
+                    partidos.Add(partido);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al listar partidos: " + ex.Message);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return partidos;
+        }
+
+
 
 
     }
