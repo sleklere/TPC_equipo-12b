@@ -24,6 +24,15 @@ namespace TPC_equipo_12b
         protected global::System.Web.UI.WebControls.Button btnCrearTorneo;
 
         /// <summary>
+        /// lblSinTorneos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSinTorneos;
+
+        /// <summary>
         /// rptTorneos control.
         /// </summary>
         /// <remarks>

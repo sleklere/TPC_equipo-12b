@@ -21,5 +21,6 @@ namespace Negocio
         public int GanadorId { get; set; }
         public string GanadorNombre { get; set; }
         public string NombreLiga { get; set; }
+        public string NombreTorneo { get; set; }
     }
 }

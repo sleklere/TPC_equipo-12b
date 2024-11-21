@@ -6,8 +6,15 @@
     /*color: #15aabf !important;*/
 }
 
-.navbar-custom {
+.bg-verde {
+    background-color: #12b886;
+}
 
+.bg-rojo {
+    background-color: #fa5252;
+}
+
+.navbar-custom {
 }
 
 .navbar-brand {
@@ -16,27 +23,27 @@
 }
 
 .nav-link,
-.nav-link i{
+.nav-link i {
     color: #444;
     font-weight: 600;
     border-bottom: 4px solid transparent;
 }
 
-.nav-link i {
-    border-bottom: none;
-}
+    .nav-link i {
+        border-bottom: none;
+    }
 
-.nav-link:hover {
-    color: black !important;
-    border-bottom: 4px solid rgba(var(--bs-primary-rgb));
-}
+    .nav-link:hover {
+        color: black !important;
+        border-bottom: 4px solid rgba(var(--bs-primary-rgb));
+    }
 
-.nav-link.active,
-.nav-link.active i {
-    font-weight: 700 !important;
-    /*color: #15aabf !important;*/
-    color: rgba(var(--bs-primary-rgb)) !important;
-}
+    .nav-link.active,
+    .nav-link.active i {
+        font-weight: 700 !important;
+        /*color: #15aabf !important;*/
+        color: rgba(var(--bs-primary-rgb)) !important;
+    }
 
 body {
     font-family: 'Nunito Sans', sans-serif;
@@ -45,7 +52,6 @@ body {
 }
 
 /* NAVBAR */
-
 
 /* PAGINA JUGADOR VS JUGADOR */
 

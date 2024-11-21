@@ -23,10 +23,16 @@ namespace TPC_equipo_12b
             Jugador jugadorLogueado = (Jugador)Session["Jugador"];
             ListaTorneos = negocio.ListarTorneos(jugadorLogueado.Id);
 
-            if (ListaTorneos != null)
+            if (ListaTorneos != null && ListaTorneos.Count > 0)
             {
                 rptTorneos.DataSource = ListaTorneos;
                 rptTorneos.DataBind();
+                lblSinTorneos.Visible = false;
+            } else
+            {
+                rptTorneos.DataSource = null;
+                rptTorneos.DataBind();
+                lblSinTorneos.Visible = true;
             }
         }
 
