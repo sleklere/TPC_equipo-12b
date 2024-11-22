@@ -91,6 +91,7 @@ namespace TPC_equipo_12b
             {
                 hiddenMessage.Value = "No se encontró ninguna liga con el código ingresado.";
                 hiddenMessageType.Value = "error";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showJoinModal", "openJoinModal();", true);
             }
             else
             {
@@ -101,6 +102,7 @@ namespace TPC_equipo_12b
                     // si lo esta avisar
                     hiddenMessage.Value = "Ya estás participando en la liga.";
                     hiddenMessageType.Value = "error";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showJoinModal", "openJoinModal();", true);
                 }
                 else
                 {
@@ -117,6 +119,7 @@ namespace TPC_equipo_12b
                     {
                         hiddenMessage.Value = "Error al unirse a la liga.";
                         hiddenMessageType.Value = "error";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showJoinModal", "openJoinModal();", true);
                     }
 
                 }
@@ -145,7 +148,17 @@ namespace TPC_equipo_12b
             string ligaNombre = txtLigaNombre.Text;
             LigaNegocio negocio = new LigaNegocio();
             bool isEdit = int.TryParse(hfLigaId.Value, out int ligaId) && ligaId > 0;
-            Jugador jugadorSesion = (Jugador)Session["Jugador"];
+
+
+            if (string.IsNullOrEmpty(ligaNombre))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "showCreateModal", "openUpdateModal();", true);
+                hiddenMessage.Value = "La liga debe tener un nombre.";
+                hiddenMessageType.Value = "error";
+                return;
+            }
+
+           Jugador jugadorSesion = (Jugador)Session["Jugador"];
 
             if (isEdit)
             {

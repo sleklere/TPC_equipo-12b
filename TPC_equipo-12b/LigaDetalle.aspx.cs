@@ -18,29 +18,23 @@ namespace TPC_equipo_12b
             if (Session["Jugador"] == null)
             {
                 Response.Redirect("~/AccesoDenegado.aspx");
-            } else
+            }
+            else
             {
-                ListaJugadores = new List<Jugador>();
-
                 LigaNegocio negocio = new LigaNegocio();
                 string ligaId = Request.QueryString["id"].ToString();
 
                 LigaData = negocio.getLigaById(int.Parse(ligaId));
+                CargarJugadorPorLigaParaListado();
 
                 if (!IsPostBack)
                 {
-                    //if (Request.QueryString["id"] != null)
-                    //{
-                    //    ListaJugadores = negocio.getJugadoresByLigaId(ligaId);
-                    //    txtCodigoLiga.Text = LigaData.Codigo;
-                    //}
-                    CargarJugadorPorLigaParaListado();
                     CargarPartidos();
                     CargarJugadoresPorLigaParaSelects(LigaData.Id);
                     CargarTiposPartido();
                 }
             }
-            
+
         }
 
         private void CargarJugadorPorLigaParaListado()
@@ -82,12 +76,6 @@ namespace TPC_equipo_12b
             ddlTipoPartido.DataValueField = "Id";
             ddlTipoPartido.DataBind();
             ddlTipoPartido.Items.Insert(0, new ListItem("Seleccionar", ""));
-
-
-            //ddlTipoPartidoEditar.DataSource = tipoPartidos;
-            //ddlTipoPartidoEditar.DataTextField = "TextoDelSelect";
-            //ddlTipoPartidoEditar.DataValueField = "Id";
-            //ddlTipoPartidoEditar.DataBind();
         }
 
         private void CargarJugadoresPorLigaParaSelects(int ligaId)
@@ -118,6 +106,7 @@ namespace TPC_equipo_12b
             {
                 hiddenMessage.Value = "Completa los campos obligatorios.";
                 hiddenMessageType.Value = "error";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showModal", "openCreateModal();", true);
                 return;
             }
 
@@ -127,10 +116,11 @@ namespace TPC_equipo_12b
             int jugador1Id = int.Parse(ddlJugador1.SelectedValue);
             int jugador2Id = int.Parse(ddlJugador2.SelectedValue);
 
-            if(jugador1Id == jugador2Id)
+            if (jugador1Id == jugador2Id)
             {
                 hiddenMessage.Value = "Los jugadores deben ser distintos.";
                 hiddenMessageType.Value = "error";
+                ScriptManager.RegisterStartupScript(this, GetType(), "showModal", "openCreateModal();", true);
                 return;
             }
 
@@ -140,16 +130,18 @@ namespace TPC_equipo_12b
 
             if (tipoPartido == 1)
             {
-                if(puntosJugador1 < 11 && puntosJugador2 < 11)
+                if (puntosJugador1 < 11 && puntosJugador2 < 11)
                 {
                     hiddenMessage.Value = "El partido es a 11 puntos";
                     hiddenMessageType.Value = "error";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showModal", "openCreateModal();", true);
                     return;
                 }
                 if (puntosJugador1 > 9 && puntosJugador2 > 9 && Math.Abs(puntosJugador1 - puntosJugador2) != 2)
                 {
                     hiddenMessage.Value = "La diferencia debe ser de 2 puntos.";
                     hiddenMessageType.Value = "error";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showModal", "openCreateModal();", true);
                     return;
                 }
             }
@@ -159,12 +151,14 @@ namespace TPC_equipo_12b
                 {
                     hiddenMessage.Value = "El partido es a 21 puntos";
                     hiddenMessageType.Value = "error";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showModal", "openCreateModal();", true);
                     return;
                 }
                 if (puntosJugador1 > 19 && puntosJugador2 > 19 && Math.Abs(puntosJugador1 - puntosJugador2) != 2)
                 {
                     hiddenMessage.Value = "La diferencia debe ser de 2 puntos.";
                     hiddenMessageType.Value = "error";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showModal", "openCreateModal();", true);
                     return;
                 }
             }
@@ -223,7 +217,7 @@ namespace TPC_equipo_12b
             int jugador1Id = int.Parse(hiddenUpdateJ1Id.Value);
             int jugador2Id = int.Parse(hiddenUpdateJ2Id.Value);
             int ganadorId = int.Parse(hiddenUpdateGanadorId.Value);
-            int tipoPartido= int.Parse(hiddenTipoPartido.Value);
+            int tipoPartido = int.Parse(hiddenTipoPartido.Value);
 
             int puntosJugador1 = int.Parse(txtEditPuntosJugador1.Text);
             int puntosJugador2 = int.Parse(txtEditPuntosJugador2.Text);
@@ -235,12 +229,14 @@ namespace TPC_equipo_12b
                 {
                     hiddenMessage.Value = "El partido es a 11 puntos";
                     hiddenMessageType.Value = "error";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showModal", "openUpdateModal();", true);
                     return;
                 }
                 if (puntosJugador1 > 9 && puntosJugador2 > 9 && Math.Abs(puntosJugador1 - puntosJugador2) != 2)
                 {
                     hiddenMessage.Value = "La diferencia debe ser de 2 puntos.";
                     hiddenMessageType.Value = "error";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showModal", "openUpdateModal();", true);
                     return;
                 }
             }
@@ -250,12 +246,14 @@ namespace TPC_equipo_12b
                 {
                     hiddenMessage.Value = "El partido es a 21 puntos";
                     hiddenMessageType.Value = "error";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showModal", "openUpdateModal();", true);
                     return;
                 }
                 if (puntosJugador1 > 19 && puntosJugador2 > 19 && Math.Abs(puntosJugador1 - puntosJugador2) != 2)
                 {
                     hiddenMessage.Value = "La diferencia debe ser de 2 puntos.";
                     hiddenMessageType.Value = "error";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showModal", "openUpdateModal();", true);
                     return;
                 }
             }
