@@ -316,12 +316,12 @@ namespace Negocio
                     datos.SetearConsulta(@"
                         SELECT 
                             J1.id AS Jugador1Id, 
-                            J1.username AS Jugador1Nombre, 
+                            J1.username AS Jugador1Username, 
                             SUM(CASE WHEN PJ1.puntos > PJ2.puntos THEN 1 ELSE 0 END) AS Jugador1Victorias,
                             SUM(CASE WHEN PJ1.puntos < PJ2.puntos THEN 1 ELSE 0 END) AS Jugador1Derrotas,
                             
                             J2.id AS Jugador2Id, 
-                            J2.username AS Jugador2Nombre, 
+                            J2.username AS Jugador2Username, 
                             SUM(CASE WHEN PJ2.puntos > PJ1.puntos THEN 1 ELSE 0 END) AS Jugador2Victorias,
                             SUM(CASE WHEN PJ2.puntos < PJ1.puntos THEN 1 ELSE 0 END) AS Jugador2Derrotas,
                             
@@ -361,7 +361,7 @@ namespace Negocio
                         versus = new VersusDTO
                         {
                             Jugador1Id = (int)datos.Lector["Jugador1Id"],
-                            Jugador1Nombre = (string)datos.Lector["Jugador1Nombre"],
+                            Jugador1Username = (string)datos.Lector["Jugador1Username"],
                             Jugador1Victorias = (int)datos.Lector["Jugador1Victorias"],
                             Jugador1Derrotas = (int)datos.Lector["Jugador1Derrotas"],
                             Jugador1TotalPartidos = (int)datos.Lector["Jugador1TotalPartidos"],
@@ -369,7 +369,7 @@ namespace Negocio
                             TorneosGanadosJugador1 = (int)datos.Lector["TorneosGanadosJugador1"],
 
                             Jugador2Id = (int)datos.Lector["Jugador2Id"],
-                            Jugador2Nombre = (string)datos.Lector["Jugador2Nombre"],
+                            Jugador2Username = (string)datos.Lector["Jugador2Username"],
                             Jugador2Victorias = (int)datos.Lector["Jugador2Victorias"],
                             Jugador2Derrotas = (int)datos.Lector["Jugador2Derrotas"],
                             Jugador2TotalPartidos = (int)datos.Lector["Jugador2TotalPartidos"],
