@@ -13,23 +13,21 @@
         <%-- jugador 1 --%>
         <div class="d-flex flex-column">
             <div class="mb-3">
-                <%--<label for="ddlJugador1" class="form-label">Jugador 1</label>--%>
                 <asp:DropDownList ID="ddlJugador1" runat="server" CssClass="form-select" OnSelectedIndexChanged="ddlJugador1_SelectedIndexChanged" AutoPostBack="true">
                 </asp:DropDownList>
             </div>
             <div class="card text-center mb-4 versus-card-jugador" style="width: 400px;">
-                <img src="https://via.placeholder.com/150" alt="Foto de Perfil" class="card-img-top rounded-circle mt-3" style="width: 200px; height: 200px; object-fit: cover; margin: 0 auto;">
+                <div class="rounded-circle d-flex justify-content-center align-items-center text-white mx-auto mt-3"
+                    style="background-color: #228be6; width: 200px; height: 200px; font-size: 5rem;">
+                        <asp:Label ID="inicialJugador1" runat="server" ForeColor="white" />
+                </div>
+
                 <div class="card-body">
-                    <%--                <h5 class="card-title fw-bold">
-                    <asp:Label ID="lblJugador1Nombre" runat="server" />
-                </h5>--%>
 
                     <p class="mb-1">
                         <strong>W/L Histórico:</strong>
                         <asp:Label ID="lblVDHistoricoJ1" runat="server" ForeColor="Black" />
                     </p>
-                    <%--<p class="mb-1"><strong>Torneos Ganados:</strong> 3</p>--%>
-                    <%--<p class="mb-1"><strong>Mejor Resultado Torneo:</strong> Final</p>--%>
                     <p class="mb-1">
                         <strong>Total Partidos Jugados:</strong>
                         <asp:Label ID="lblJugador1TotalPartidos" runat="server" ForeColor="Black" />
@@ -81,7 +79,10 @@
                 </asp:DropDownList>
             </div>
             <div class="card text-center mb-4 versus-card-jugador" style="width: 400px;">
-                <img src="https://via.placeholder.com/150" alt="Foto de Perfil" class="card-img-top rounded-circle mt-3" style="width: 200px; height: 200px; object-fit: cover; margin: 0 auto;">
+                <div class="rounded-circle d-flex justify-content-center align-items-center text-white mx-auto mt-3"
+                    style="background-color: #228be6; width: 200px; height: 200px; font-size: 5rem;">
+                        <asp:Label ID="inicialJugador2" runat="server" ForeColor="white" />
+                </div>
                 <div class="card-body">
                     <%--                <h5 class="card-title fw-bold">
                     <asp:Label ID="lblJugador2Nombre" runat="server" />

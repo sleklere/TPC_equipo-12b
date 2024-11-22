@@ -24,6 +24,15 @@ namespace TPC_equipo_12b
         protected global::System.Web.UI.WebControls.DropDownList ddlJugador1;
 
         /// <summary>
+        /// inicialJugador1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label inicialJugador1;
+
+        /// <summary>
         /// lblVDHistoricoJ1 control.
         /// </summary>
         /// <remarks>
@@ -94,6 +103,15 @@ namespace TPC_equipo_12b
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlJugador2;
+
+        /// <summary>
+        /// inicialJugador2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label inicialJugador2;
 
         /// <summary>
         /// lblVDHistoricoJ2 control.

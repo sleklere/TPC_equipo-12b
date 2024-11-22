@@ -62,11 +62,16 @@ namespace TPC_equipo_12b
             int jugador1Id = int.Parse(ddlJugador1.SelectedValue);
             int jugador2Id = int.Parse(ddlJugador2.SelectedValue);
 
-            if (jugador1Id == -1 || jugador2Id == -1) return;
+            if (jugador1Id == -1 || jugador2Id == -1)
+            {
+                LimpiarValores();
+                return;
+            }
 
             if (jugador1Id == jugador2Id)
             {
                 hiddenMessage.Value = "Por favor selecciona dos jugadores diferentes.";
+                LimpiarValores();
                 return;
             }
 
@@ -87,6 +92,7 @@ namespace TPC_equipo_12b
                 porcentajeVictoriasJ1.Text = $"{pvJ1:F}%";
                 lblRachaJ1.Text = jugadorNegocio.RachaVictorias(jugador1Id).ToString();
                 lblTorneosJ1.Text = datosVersus.TorneosGanadosJugador1.ToString();
+                inicialJugador1.Text = $"{datosVersus.Jugador1Username.ToUpper()[0]}";
 
                 //lblJugador2Nombre.Text = datosVersus.Jugador2Nombre;
                 lblJugador2Victorias.Text = datosVersus.Jugador2Victorias.ToString();
@@ -98,6 +104,7 @@ namespace TPC_equipo_12b
                 porcentajeVictoriasJ2.Text = $"{pvJ2:F}%";
                 lblRachaJ2.Text = jugadorNegocio.RachaVictorias(jugador2Id).ToString();
                 lblTorneosJ2.Text = datosVersus.TorneosGanadosJugador2.ToString();
+                inicialJugador2.Text = $"{datosVersus.Jugador2Username.ToUpper()[0]}";
 
 
                 if (datosVersus.Jugador1Victorias == datosVersus.Jugador2Victorias)
@@ -135,6 +142,8 @@ namespace TPC_equipo_12b
             rptPartidos.DataBind();
             lblJugador1Victorias.CssClass = "";
             lblJugador2Victorias.CssClass = "";
+            inicialJugador1.Text = "-";
+            inicialJugador2.Text = "-";
         }
 
         protected void CargarPartidosVersus(int jugador1Id, int jugador2Id)
