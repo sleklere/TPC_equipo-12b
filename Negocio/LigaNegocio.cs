@@ -486,10 +486,11 @@ namespace Negocio
             {
                 datos.SetearConsulta(@"SELECT J.id, J.nombre, J.apellido, J.username, J.email,
                                         SUM(CASE WHEN P.ganador_id = J.id THEN 1 ELSE 0 END) AS PartidosGanados,
-                                        SUM(CASE WHEN P.ganador_id != J.id THEN 1 ELSE 0 END) AS PartidosPerdidos
+                                         SUM(CASE WHEN P.ganador_id != J.id AND PJ.jugador_id = J.id THEN 1 ELSE 0 END) AS PartidosPerdidos
                                         FROM JUGADOR J
                                         INNER JOIN LIGA_JUGADOR LJ ON J.id = LJ.jugador_id
-                                        LEFT JOIN PARTIDO P ON P.liga_id = LJ.liga_id
+                                        LEFT JOIN PARTIDO_JUGADOR PJ ON PJ.jugador_id = J.id
+                                        LEFT JOIN PARTIDO P ON PJ.partido_id = P.id
                                         WHERE LJ.liga_id = @LigaId
                                         GROUP BY 
                                             J.id, J.nombre, J.apellido, J.username, J.email

@@ -400,6 +400,7 @@ namespace Negocio
                 datos.SetearConsulta(@"
                 SELECT TOP 10 
                     p.id AS PartidoId,
+                    T.nombre AS TorneoNombre,
                     p.fecha,
                     L.nombre AS LigaNombre,
                     j1.nombre AS NombreJugador1,
@@ -417,7 +418,9 @@ namespace Negocio
                 JOIN Partido_Jugador pj2 ON p.id = pj2.partido_id AND pj1.jugador_id > pj2.jugador_id
                 JOIN Jugador j1 ON pj1.jugador_id = j1.id
                 JOIN Jugador j2 ON pj2.jugador_id = j2.id
-                JOIN LIGA L ON p.liga_id = L.id
+                LEFT JOIN LIGA L ON p.liga_id = L.id
+                LEFT JOIN RONDA R ON p.ronda_id = R.id
+                LEFT JOIN TORNEO T ON R.torneo_id = T.id
                 WHERE pj1.jugador_id = @IdJugador OR pj2.jugador_id = @IdJugador
                 ORDER BY p.fecha DESC");
 
@@ -438,7 +441,8 @@ namespace Negocio
                         ApellidoJugador2 = datos.Lector["ApellidoJugador2"].ToString(),
                         PuntosJugador2 = (int)datos.Lector["PuntosJugador2"],
                         EsGanador = Convert.ToBoolean(datos.Lector["EsGanador"]),
-                        NombreLiga = datos.Lector["LigaNombre"].ToString()
+                        NombreLiga = datos.Lector["LigaNombre"] != DBNull.Value ? datos.Lector["LigaNombre"].ToString() : "",
+                        NombreTorneo = datos.Lector["TorneoNombre"] != DBNull.Value ? datos.Lector["TorneoNombre"].ToString() : "",
                     };
                     partidos.Add(partido);
                 }

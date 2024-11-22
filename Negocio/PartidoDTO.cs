@@ -20,6 +20,7 @@ namespace Negocio
         public int PuntosJugador2 { get; set; }
         public bool EsGanador { get; set; }
         public string NombreLiga { get; set; }
+        public string NombreTorneo{ get; set; }
         public int GanadorId { get; set; }
         public int TipoPartidoId { get; set; }
     }
