@@ -32,6 +32,12 @@ namespace TPC_equipo_12b
                 return;
             }
 
+            if (password.Length < 8)
+            {
+                hiddenMessage.Value = "La contraseña debe tener al menos 8 caracteres.";
+                return;
+            }
+
             try
             {
                 Jugador nuevoJugador = new Jugador
